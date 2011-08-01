@@ -1,0 +1,164 @@
+% -*- latex -*-
+
+\documentclass[twocolumn,10pt]{article}
+
+\usepackage{amsfonts}
+\usepackage{amssymb}
+\usepackage{amsmath}
+\usepackage{graphicx}
+\usepackage{varioref}
+\usepackage{fancyvrb}
+\usepackage{ifthen}
+\usepackage{cite}
+\usepackage{xspace}
+\usepackage{hyperref}
+
+\usepackage{color}
+\definecolor{yellow}{rgb}{1,1,0}
+\definecolor{black}{rgb}{0,0,0}
+\definecolor{ltcyan}{rgb}{.75,1,1}
+\definecolor{blue}{rgb}{0,0,1}
+\definecolor{red}{rgb}{1,0,0}
+\definecolor{darkred}{rgb}{0.5,0,0}
+\definecolor{darkgreen}{rgb}{0,0.5,0}
+
+% Cite commands I use to abstract away the different ways to reference an
+% entry in the bibliography (superscripts, numbers, dates, or author
+% abbreviations).  \scite is a short cite that is used immediately after
+% when the authors are mentioned.  \lcite is a full citation that is used
+% anywhere.  Both should be used right next to the text being cited without
+% any spacing.
+\newcommand*{\lcite}[1]{~\cite{#1}}
+\newcommand*{\scite}[1]{~\cite{#1}}
+
+\newcommand*{\keyterm}[1]{\emph{#1}}
+
+\newcommand{\etal}{et al.}
+
+\newcommand{\fix}[1]{{\color{red}\textbf{\textsc{[#1]}}}}
+
+% Avoid putting figures on their own page.
+\renewcommand{\textfraction}{0.05}
+\renewcommand{\topfraction}{0.95}
+\renewcommand{\bottomfraction}{0.5}
+
+% Make sure this is big enough so that only big figures end up on their own
+% page but small enough so that if a figure does have to be on its own
+% page, it won't push everything to the bottom because it's not big enough
+% to have its own page.
+\renewcommand{\floatpagefraction}{.75}
+
+\title{Modern Visualization Pipelines}
+
+\author{Kenneth Moreland}
+
+\date{}
+
+\begin{document}
+
+\maketitle
+
+
+\section*{Abstract}
+
+
+\section{Introduction}
+\label{sec:Introduction}
+
+\lcite{VTK}
+
+
+\section{Basic Visualization Pipelines}
+\label{sec:BasicVisualizationPipelines}
+
+
+\section{Execution Management}
+\label{sec:ExecutionManagement}
+
+\subsection{Push vs. Pull}
+\label{sec:PushPull}
+
+\subsection{Centralized vs. Distributed}
+\label{sec:CentralizedDistributed}
+
+
+\section{Metadata}
+\label{sec:Metadata}
+
+\subsection{Extents}
+\label{sec:Extents}
+
+Reporting extents in multiple passes.
+
+Sending extent requests up pipeline.
+
+\subsection{Contracts}
+\label{sec:Contracts}
+
+\subsection{Time}
+\label{sec:Time}
+
+\subsection{Prioritized Streaming}
+\label{sec:PrioritizedStreaming}
+
+\subsection{Query Driven Visualization}
+\label{sec:QueryDrivenVisualization}
+
+
+\section{Parallel Execution}
+\label{sec:ParallelExecution}
+
+\subsection{Basic Parallel Execution Modes}
+\label{sec:ParallelExecution:Modes}
+
+\subsection{Rendering}
+\label{sec:ParallelExecution:Rendering}
+
+\subsection{Scalability}
+\label{sec:Scalability}
+
+\subsection{In Situ}
+\label{sec:InSitu}
+
+\subsection{Hybrid Parallel}
+\label{sec:HybridParallel}
+
+\subsection{Scheduling}
+\label{sec:Scheduling}
+
+Multi-core.  Heterogeneous.  Hyperflow.
+
+\section{Visualization Pipeline Alternatives}
+\label{sec:Alternatives}
+
+\subsection{Field Abstraction}
+\label{sec:FieldAbstraction}
+
+Field Model (FM).  Field Encapsulation Library (FEL).
+
+\subsection{MapReduce}
+\label{sec:MapReduce}
+
+\subsection{Worklets}
+\label{sec:Worklets}
+
+
+\section{Conclusion}
+\label{sec:Conclusion}
+
+
+\section{Acknowledgements}
+
+This work was supported in part by the DOE Office of Science, Advanced
+Scientific Computing Research, under award number 10-014707, program
+manager Lucy Nowell.
+
+Sandia National Laboratories is a multi-program laboratory operated by
+Sandia Corporation, a wholly owned subsidiary of Lockheed Martin
+Corporation, for the U.S. Department of Energy's National Nuclear Security
+Administration.
+
+\bibliographystyle{plain}
+\bibliography{VisPipelines}
+
+\end{document}
