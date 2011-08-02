@@ -105,7 +105,55 @@ advancements introduced over the years and current research.
 \section{Basic Visualization Pipelines}
 \label{sec:BasicVisualizationPipelines}
 
-A visualization pipeline 
+A visualization pipeline encapsulates an algorithm in one of three types of
+objects: \keyterm{sources}, \keyterm{filters}, and \keyterm{sinks}.  A
+source object produces data that it makes available through an
+\keyterm{output}.  File readers and synthetic data generators are typical
+source objects.  A sink object accepts data through an \keyterm{input} and
+performs an operation with no further result (as far as the pipeline is
+concerned).  Typical sinks are file writers and rendering components that
+provide images to a user interface.  A filter object has at least one input
+from which it transform data and provides results through at least one
+output.
+
+The intention is to encapsulate algorithms in interchangeable source,
+filter, and sink components with generic connection ports (inputs and
+outputs).  An output from one component can be connected to the input from
+another component such that the results of one algorithm become the inputs
+to another algorithm.  These connected components form a
+\keyterm{pipeline}.  Figure~\ref{fig:SimplePipeline} demonstrates a simple
+but common pipeline featuring file reader (source), isosurface
+generator\lcite{Lorensen1987} (filter), and image renderer (sink).
+
+\begin{figure}[htbp]
+  \centering
+  Reader $\rightarrow$ Isosurface $\rightarrow$ Renderer
+  \caption{A simple visualization pipeline.}
+  \label{fig:SimplePipeline}
+\end{figure}
+
+Pipeline components are highly interchangeable.  Any two components can be
+connected so long as the data in the output is compatible with the expected
+data of the downstream input.  Pipelines can be arbitrarily deep.
+Pipelines can also branch.  A \keyterm{fan out} occurs when the output of
+one component is connected to the inputs of multiple other components.  A
+\keyterm{fan in} occurs when a component accepts multiple inputs that can
+come from separate component outputs.  Figure~\ref{fig:ComplicatedPipeline}
+demonstrates a pipeline with branching (adapted from the ParaView
+tutorial\lcite{ParaViewTutorial}).
+
+\begin{figure}[htbp]
+  \centering
+  A more complicated pipeline.
+  \caption{A visualization pipeline with branching.}
+  \label{fig:ComplicatedPipeline}
+\end{figure}
+
+For more information on using visualization pipelines and the components
+they typically contain, consult the documentation for one of the numerous
+libraries or applications using a visualization
+pipeline\lcite{VTK,ParaView,ParaViewTutorial,SCIRunUserGuide,IRISExplorerUsersGuide}.
+\fix{Add OpenDX.  Site was down.}
 
 
 \section{Execution Management}
