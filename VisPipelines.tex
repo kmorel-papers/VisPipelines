@@ -156,35 +156,148 @@ tutorial\lcite{ParaViewTutorial}).
 For more information on using visualization pipelines and the components
 they typically contain, consult the documentation for one of the numerous
 libraries or applications using a visualization
-pipeline\lcite{VTK,ParaView,ParaViewTutorial,SCIRunUserGuide,IRISExplorerUsersGuide}.
+pipeline\lcite{VTK,ParaView,ParaViewTutorial,SCIRunUserGuide,IRISExplorerUsersGuide,VisTrailsDocumentation}.
 \fix{Add OpenDX.  Site was down.}
 
 
 \section{Execution Management}
 \label{sec:ExecutionManagement}
 
-\subsection{Push vs. Pull}
-\label{sec:PushPull}
+The topology of a pipeline dictates the flow of data and places constraints
+on the order in which components can be executed, but it does not determine
+how or when components get executed.  Visualization pipeline systems can
+vary significantly in how they manage execution.
 
-\subsection{Centralized vs. Distributed}
+\subsection{Execution Drivers}
+\label{sec:ExecutionDrivers}
+
+The visualization pipeline represents a static network of operations
+through which data flows.  Typical usage entails first establishing the
+visualization pipeline and then executing the pipeline on one or more data
+collections.  Consequently, the behavior of when components get executed is
+a primary feature of visualization pipeline systems.  Visualization
+pipelines generally fall under two execution systems: event driven and
+demand driven.
+
+An \keyterm{even-driven} pipeline launches execution as data becomes
+available in sources.  When new data becomes available in a source, that
+source component must be alerted.  When sources produce data, they push it
+to the downstream components and trigger an event to execute them.  Those
+downstream components in turn may produce their own data to push to the
+next component.  Because the method of the event-driven pipeline is to push
+data to the downstream components, this method is also known as the
+\keyterm{push model}.  The event-driven method of execution is useful when
+applying a visualization pipeline to data that is expected to change over
+time.
+
+A \keyterm{demand-driven} pipeline launches execution in response to
+requests for data.  Execution is initiated at the bottom of the pipeline in
+a sink.  The sink's upstream components satisfy this request by first
+requesting data from their upstream components, and so on up to the
+sources.  Once execution reaches a source, it produces data and returns
+execution back to its downstream components.  The execution eventually
+unrolls back to the originating sink.  Because the method of the
+demand-driven pipeline is to pull data from the upstream components, this
+method is also known as the \keyterm{pull model}.  The demand-driven method
+of execution is useful when using a visualization pipeline to provide data
+to an end system.  For example, the visualization could respond to render
+requests to update a GUI.
+
+\subsection{Caching Intermediate Values}
+\label{sec:Caching}
+
+Caching, which saves component execution outputs, is an important feature
+for both execution methods.  In the case of the event-driven pipeline, a
+component may execute only when data from all inputs is pushed to it.
+Thus, the execution must know when to cache the data and where to retrieve
+it when the rest of the data is later pushed.
+
+In the case of the demand-driven pipeline, a component with fan out could
+receive pull requests from multiple downstream components during the same
+original sink request.  Rather than execute multiple times, the component
+can first check to see if the previously computed result is still valid and
+return that if possible.
+
+Although caching all the intermediate values in a pipeline can remove
+redundant computation, it also clearly requires more storage.  Thus,
+managing the caching often involves a trade-off between speed and memory.
+The cost of caching can be mitigated by favoring shallow copies of data
+from a component's inputs to its outputs.
+
+\subsection{Centralized vs. Distributed Control}
 \label{sec:CentralizedDistributed}
+
+The control mechanism for a visualization pipeline can be either
+centralized or distributed.  A \keyterm{centralized control} has a single
+unit managing the execution of all components in the pipeline.  The
+centralized control has links to all components, understands their
+connections, and initiates all execution in the pipeline.
+
+A \keyterm{distributed control} has a separate unit for each component in
+the pipeline.  The distributed control unit nominally knows only about a
+single component and its inputs and outputs.  The distributed control unit
+can initiate execution on only its own component and must send messages to
+propagate execution elsewhere.
+
+Centralized control is advantageous in that it can perform a more
+thorough analysis of the pipeline's network to more finely control the
+execution.  Such knowledge can be useful in making decisions about caching
+(described in Section~\ref{sec:Caching}) and load balancing for parallel
+execution (described in Section~\ref{sec:ParallelExecution}).  However, the
+implementation of a centralized control is more complex because of the
+larger management task.  Distributed control, in contrast, has more limited
+knowledge of the pipeline, but tends to be simpler to implement and
+manage.
+
+\subsection{Interchangeable Executive}
+\label{sec:InterchangeableExecutive}
+
+Many visualization pipeline implementations have a fixed execution
+management system.  However, such a system can provide more flexibility by
+separating its execution management into a \keyterm{executive} object.  The
+executive object is an independent object that manages pipeline execution.
+Through polymorphism, different types of execution models can be
+supported.  For example, VTK is designed as a demand-driven pipeline, but
+with its interchangeable executives it can be converted to an event-driven
+pipeline, as demonstrated by Vo \etal\lcite{Vo2010}.
+
+Replacing the executive in a pipeline with centralized control is
+straightforward.  The control is, by definition, its own separate unit.  In
+contrast, a distributed control system must have an independent executive
+object attached to each component in the pipeline.  The component objects
+get relegated to only a function to execute whereas the executive manages
+pipeline connections, data movement, and execution\lcite{VTKUsersGuide}.
 
 \subsection{Block Iteration}
 \label{sec:BlockIteration}
 
-\subsection{Detached Executive}
-\label{sec:DetachedExecutive}
+Some data sets are actually a conglomerate of smaller data sets.  These
+smaller data sets are called either \keyterm{blocks} or \keyterm{domains}
+of the whole.  One example of a multi-block data set is an assembly of
+parts.  Another example is adaptive mesh refinement (AMR)\lcite{Berger1989}
+in which a hierarchy of progressively finer grids selectively refines
+regions of interest.
+
+Many visualization algorithms can be applied independently to each block in
+a multi-block data set.  Rather than have every component specifically
+attend to the multi-block nature of the data, the execution management can
+implicitly run an algorithm independently on every block in the data
+set\lcite{VTKUsersGuide}.
 
 
 \section{Metadata}
 \label{sec:Metadata}
 
-\subsection{Extents}
-\label{sec:Extents}
+\subsection{Regions}
+\label{sec:Regions}
 
-Reporting extents in multiple passes.
+Types of regions: extents, pieces, blocks/domains.
 
-Sending extent requests up pipeline.
+Ghost cells.
+
+Reporting regions in multiple passes.
+
+Sending region requests up pipeline.
 
 \subsection{Contracts}
 \label{sec:Contracts}
