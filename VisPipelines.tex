@@ -65,25 +65,27 @@
 
 The most common abstraction used by visualization libraries and
 applications today is what is known as the visualization pipeline.  The
-visualization provides a mechanism to encapsulate algorithms and then
-couple them together in a variety of ways.  The visualization pipeline has
-been in existence for over twenty years, and over this time many variations
-and improvements have been proposed.  This paper provides a literature
-review of the most prevalent features of visualization pipelines and some
-of the most recent research directions.
+visualization pipeline provides a mechanism to encapsulate algorithms and
+then couple them together in a variety of ways.  The visualization pipeline
+has been in existence for over twenty years, and over this time many
+variations and improvements have been proposed.  This paper provides a
+literature review of the most prevalent features of visualization pipelines
+and some of the most recent research directions.
 
 
 \section{Introduction}
 \label{sec:Introduction}
 
-A visualization system must ingest, transform, display, and record data.
-These operations are actualized by a collection of loosely coupled
-algorithms.  Many applications dictate flexibility in the way these
-operations are applied to data, and the \keyterm{visualization pipeline}
-provides a simplifying metaphor.
+The field of scientific visualization was launched with the 1987 National
+Science Foundation Visualization in Scientific Computing workshop
+report\lcite{ViSC1987}, and some of the first proposed frameworks used a
+\keyterm{visualization pipeline} for managing the ingestion,
+transformation, display, and recording of
+data\lcite{Haeberli1988,Lucas1992}.  The combination of simplicity and
+power makes the visualization pipeline still the most prevalent metaphor
+encountered today.
 
-The combination of simplicity and power makes the visualization pipeline is
-the most prevalent metaphor encountered today.  It provides the key
+The visualization pipeline provides the key
 structure in many visualization development systems such as the
 Visualization Toolkit (VTK)\lcite{VTK}, SCIRun\lcite{SCIRun}, the
 Application Visualization System (AVS)\lcite{AVS}, OpenDX\lcite{OpenDX},
@@ -91,7 +93,7 @@ and Iris Explorer\lcite{IRISExplorer}.  Visualization applications like
 ParaView\lcite{ParaView}, VisTrails\lcite{VisTrails}, and
 MayaVi\lcite{MayaVi} allow end users to build visualization pipelines with
 graphical user interface representations.  The visualization pipeline is
-also used internally be a number of other applications including
+also used internally in a number of other applications including
 VisIt\lcite{VisIt}, VolView\lcite{VolView}, OsiriX\lcite{OsiriX}, 3D
 Slicer\lcite{3DSlicer}, and BioImageXD\lcite{BioImageXD}.
 
@@ -103,6 +105,8 @@ advancements introduced over the years and current research.
 \section{Basic Visualization Pipelines}
 \label{sec:BasicVisualizationPipelines}
 
+A visualization pipeline 
+
 
 \section{Execution Management}
 \label{sec:ExecutionManagement}
@@ -112,6 +116,12 @@ advancements introduced over the years and current research.
 
 \subsection{Centralized vs. Distributed}
 \label{sec:CentralizedDistributed}
+
+\subsection{Block Iteration}
+\label{sec:BlockIteration}
+
+\subsection{Detached Executive}
+\label{sec:DetachedExecutive}
 
 
 \section{Metadata}
@@ -187,7 +197,7 @@ Field Model (FM).  Field Encapsulation Library (FEL).
 \label{sec:Conclusion}
 
 
-\section{Acknowledgements}
+\section{Acknowledgments}
 
 This work was supported in part by the DOE Office of Science, Advanced
 Scientific Computing Research, under award number 10-014707, program
