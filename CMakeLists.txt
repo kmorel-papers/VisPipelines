@@ -8,6 +8,9 @@ set(images
   images/SimplePipeline.pdf
   images/BranchingPipeline.pdf
   images/BranchingPipelineResult.png
+  images/UpdateInformation.pdf
+  images/UpdateRegion.pdf
+  images/UpdateData.pdf
   )
 
 add_latex_document(VisPipelines.tex

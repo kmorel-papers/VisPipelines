@@ -359,9 +359,20 @@ Figure~\ref{fig:RegionPasses}\lcite{Ahrens2001}.
 
 \begin{figure}[htbp]
   \centering
-  \subfloat[Update Information]{Whole region moves down.\label{fig:RegionPasses:UpdateInformation}}
-  \subfloat[Update Region]{Update region moves up.\label{fig:RegionPasses:UpdateRegion}}
-  \subfloat[Update Data]{Data set moves down.\label{fig:RegionPasses:UpdateData}}
+  \begin{tabular}{@{}c@{\qquad}c@{\qquad}c@{}}
+  \subfloat[Update Information]{
+    \includegraphics{images/UpdateInformation}
+    \label{fig:RegionPasses:UpdateInformation}
+  } &
+  \subfloat[Update Region]{
+    \includegraphics{images/UpdateRegion}
+    \label{fig:RegionPasses:UpdateRegion}
+  } &
+  \subfloat[Update Data]{
+    \includegraphics{images/UpdateData}
+    \label{fig:RegionPasses:UpdateData}
+  }
+  \end{tabular}
   \caption{The three pipeline passes for using regional data.}
   \label{fig:RegionPasses}
 \end{figure}
