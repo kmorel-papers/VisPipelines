@@ -6,6 +6,7 @@
 \usepackage{amssymb}
 \usepackage{amsmath}
 \usepackage{graphicx}
+\usepackage{subfig}
 \usepackage{varioref}
 \usepackage{fancyvrb}
 \usepackage{ifthen}
@@ -268,6 +269,38 @@ object attached to each component in the pipeline.  The component objects
 get relegated to only a function to execute whereas the executive manages
 pipeline connections, data movement, and execution\lcite{VTKUsersGuide}.
 
+\subsection{Out-of-Core Streaming}
+\label{sec:OutOfCore}
+
+An \keyterm{out-of-core} algorithm (or more formally an
+\keyterm{external-memory algorithm}) is a general algorithmic technique
+that can be applied when a data set is too large to fit within a computer's
+internal memory.  When processing data out of core, only a fraction of the
+data is read from storage at any one time\lcite{Vitter2001}.  The results
+for that region of data are generated and stored, then the next segment of
+data is read.
+
+A rudimentary but effective way of performing out-of-core processing in a
+visualization pipeline is to read data in pieces and let each piece flow
+through the pipe independently.  Because pieces are fed into the pipeline
+sequentially, this method of execution is often called \keyterm{streaming}.
+In order for streaming to be feasible, the data must be separable (that is,
+can be split into pieces), and the algorithm results must be invariant to
+the number and order of the pieces (that is, each piece can be computed
+independently).  In a demand-driven pipeline, it is also necessary to be
+able to identify what piece of input is required to process some piece of
+output\lcite{Law1999}.
+
+Because the input data set is broken into pieces, the boundary between
+pieces is important for many algorithms.  Boundaries are often handled by
+adding an extra layer of cells, called \keyterm{ghost
+  cells}\lcite{Ahrens2001}.  These ghost cells complete the neighborhood
+information for each piece and can be removed from the final result.
+
+Some algorithms can be run out-of-core with a simple execution model that
+iterates over pieces.  However, most pipelines can implement streaming more
+effectively with metadata, discussed in Section~\ref{sec:Metadata}.
+
 \subsection{Block Iteration}
 \label{sec:BlockIteration}
 
@@ -288,19 +321,72 @@ set\lcite{VTKUsersGuide}.
 \section{Metadata}
 \label{sec:Metadata}
 
+So far, we have considered the visualization pipeline as simply a flow
+network for data, and the earliest implementations were just that.  Modern
+visualization pipelines have introduced the concept of metadata, a brief
+description of the actual data, into the pipeline.  The introduction of
+metadata allows the pipeline to process data in more powerful ways.
+Metadata can flow through the pipeline independent of, and often in
+different directions than, the actual data.  The introduction of metadata
+can in turn change the execution management of the pipeline.
+
 \subsection{Regions}
 \label{sec:Regions}
 
-Types of regions: extents, pieces, blocks/domains.
+Perhaps the most important piece of information a visualization pipeline
+can use is the region the data is defined over and the regions the data can
+be split up into.  Knowing and specifying regions supports execution
+management for out of core and parallel computation (described in Sections
+\ref{sec:OutOfCore} and \ref{sec:ParallelExecution}, respectively).
 
-Ghost cells.
+Visualization pipelines operate on three basic types of regions.
+\begin{description}
+\item[Extents] are valid index ranges for regular multidimensional arrays
+  of data.  Extents allow a fine granularity in defining regions as
+  sub-arrays within a larger array.
+\item[Pieces] are arbitrary collections of cells.  Pieces allow
+  unstructured grids to be easily decomposed into discretionary regions.
+\item[Blocks] (or domains) represent a logical domain decomposition.
+  Blocks are similar to pieces in that they can represent arbitrary
+  collections, but blocks are defined by the data set and their structures
+  are considered to have some meaning.
+\end{description}
 
-Reporting regions in multiple passes.
+Region metadata can flow throughout the pipeline independently of data.  A
+general implementation to propagate region information and select regions
+requires the three pipeline passes demonstrated in
+Figure~\ref{fig:RegionPasses}\lcite{Ahrens2001}.
 
-Sending region requests up pipeline.
+\begin{figure}[htbp]
+  \centering
+  \subfloat[Update Information]{Whole region moves down.\label{fig:RegionPasses:UpdateInformation}}
+  \subfloat[Update Region]{Update region moves up.\label{fig:RegionPasses:UpdateRegion}}
+  \subfloat[Update Data]{Data set moves down.\label{fig:RegionPasses:UpdateData}}
+  \caption{The three pipeline passes for using regional data.}
+  \label{fig:RegionPasses}
+\end{figure}
+
+In the first \keyterm{update information} pass, sources produce the entire
+region they can generate, and that region gets passed down the pipeline.
+As the region passes through filters, they have the opportunity to change
+the region.  This could be because the filter is combining multiple regions
+from multiple inputs.  It could also be because the filter is generating a
+new topology, which has its own independent regions.
+
+In the second \keyterm{update region} pass, the application decides what
+region of data it would like a sink to process.  This update region is then
+passed backward up the pipeline during which each filter transforms the
+region respective of the output to a region respective of the input.  The
+update region pass terminates at the sources, which receive the region of
+data they must produce.
+
+In the final \keyterm{update data} pass, the actual data flows through the
+pipeline as described in Section~\ref{sec:ExecutionManagement}.
 
 \subsection{Contracts}
 \label{sec:Contracts}
+
+impact, contract
 
 \subsection{Time}
 \label{sec:Time}
