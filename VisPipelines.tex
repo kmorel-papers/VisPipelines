@@ -38,6 +38,28 @@
 
 \newcommand{\fix}[1]{{\color{red}\textbf{\textsc{[#1]}}}}
 
+\newenvironment{packeditemize}{
+  \begin{itemize}
+    \setlength{\topsep}{0pt}
+    \setlength{\itemsep}{0pt}
+    \setlength{\parskip}{0pt}
+    \setlength{\parsep}{0pt}
+    \setlength{\partopsep}{0pt}
+}{
+  \end{itemize}
+}
+
+\newenvironment{packeddescription}{
+  \begin{description}
+    \setlength{\topsep}{0pt}
+    \setlength{\itemsep}{0pt}
+    \setlength{\parskip}{0pt}
+    \setlength{\parsep}{0pt}
+    \setlength{\partopsep}{0pt}
+}{
+  \end{description}
+}
+
 % Avoid putting figures on their own page.
 \renewcommand{\textfraction}{0.05}
 \renewcommand{\topfraction}{0.95}
@@ -340,7 +362,7 @@ management for out of core and parallel computation (described in Sections
 \ref{sec:OutOfCore} and \ref{sec:ParallelExecution}, respectively).
 
 Visualization pipelines operate on three basic types of regions.
-\begin{description}
+\begin{packeddescription}
 \item[Extents] are valid index ranges for regular multidimensional arrays
   of data.  Extents allow a fine granularity in defining regions as
   sub-arrays within a larger array.
@@ -350,7 +372,7 @@ Visualization pipelines operate on three basic types of regions.
   Blocks are similar to pieces in that they can represent arbitrary
   collections, but blocks are defined by the data set and their structures
   are considered to have some meaning.
-\end{description}
+\end{packeddescription}
 The region metadata may also include the spatial range of each region.
 Such information is useful when performing operations with known spatial
 bounds.
@@ -409,13 +431,14 @@ time steps.  Such behavior arose from data sets being organized as a
 sequence of time steps and the abundance of visualization algorithms that
 are time invariant.
 
-Biddiscombe \etal\scite{Biddiscombe2007} present a method for time control
-directly in a visualization pipeline.  The basic approach is to add a time
-dimension to the region metadata described in Section~\ref{sec:Regions}.  A
-source declares what time steps are available, and each filter has the
-ability to augment that time during the update information pass.  Likewise
-in the update region pass each filter may request new or different time
-steps.  The region request may contain one or more time steps.
+Time control can be added the visualization pipeline by adding time
+information to the metadata\lcite{Biddiscombe2007}.  The basic approach is
+to add a time dimension to the region metadata described in
+Section~\ref{sec:Regions}.  A source declares what time steps are
+available, and each filter has the ability to augment that time during the
+update information pass.  Likewise in the update region pass each filter
+may request new or different time steps.  The region request may contain
+one or more time steps.
 
 These temporal regions enable filters that operate on data that changes
 over time.  For example, a temporal interpolator filter can estimate
@@ -427,10 +450,10 @@ Although such a region may be requested by this mechanism, it is seldom
 feasible to load this much data at one time.  Instead, an algorithm may
 operate on a small number of time steps at one time, iterate over all time,
 and accumulate the results.  To support this, Biddiscombe
-\etal\scite{Biddiscombe2007} also propose a \keyterm{continue executing}
-mode where a filter, while computing data, can request a re-execution of
-the upstream pipeline with different time steps and then continue to
-compute with the new data.
+\etal\scite{Biddiscombe2007} propose a \keyterm{continue executing} mode
+where a filter, while computing data, can request a re-execution of the
+upstream pipeline with different time steps and then continue to compute
+with the new data.
 
 \subsection{Contracts}
 \label{sec:Contracts}
@@ -453,6 +476,40 @@ requirements, abilities, and limitations of the pipeline.
 
 \subsection{Prioritized Streaming}
 \label{sec:PrioritizedStreaming}
+
+The discussion of streaming in Section~\ref{sec:OutOfCore} provides no
+scheme for the order in which pieces are processed.  In fact, since
+streaming specifically requires a data invariant algorithm, the order of
+operation is inconsequential with respect to correctness once the
+processing is completed.
+
+However, if one is interested in the intermediate results, the order is
+consequential.  An interactive application may show the results of a
+streaming visualization pipeline as they become available.  Such an
+application can be improved greatly by prioritizing the streamed regions to
+process those that provide the most information first\lcite{Ahrens2007}.
+Possible priority metrics include the following.
+\begin{packeditemize}
+\item Regions in close proximity to the viewer in a three dimensional
+  rendering should have higher priority.  Close objects are likely to
+  obscure those behind.
+\item Regions least likely to be culled should have the highest priority.
+  Only objects within a certain frustum are visible in a three dimensional
+  rendering, and some filters may remove data from particular spatial
+  regions.
+\item Regions with scalar values in an ``interesting'' range should be
+  given priority.  Rendering parameters may assign an opacity to scalar
+  values, and higher opacity indicates a greater interest.
+\item Regions with more variability in a field may have higher priority.
+  Homogeneous regions are unlikely to be interesting.
+\end{packeditemize}
+
+Prioritized streaming can become even more effective when the data contains
+a hierarchy of resolutions\lcite{Ahrens2009}.  The highest priority is
+given to the most coarse representation of the mesh.  This representation
+provides a general overview visualization that can be immediately useful.
+Finer sub-regions are progressively streamed in with the aforementioned
+priorities.
 
 \subsection{Query Driven Visualization}
 \label{sec:QueryDrivenVisualization}
