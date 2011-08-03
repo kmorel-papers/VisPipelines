@@ -260,7 +260,7 @@ executive object is an independent object that manages pipeline execution.
 Through polymorphism, different types of execution models can be
 supported.  For example, VTK is designed as a demand-driven pipeline, but
 with its interchangeable executives it can be converted to an event-driven
-pipeline, as demonstrated by Vo \etal\lcite{Vo2010}.
+pipeline, as demonstrated by Vo \etal\scite{Vo2010}.
 
 Replacing the executive in a pipeline with centralized control is
 straightforward.  The control is, by definition, its own separate unit.  In
@@ -351,6 +351,9 @@ Visualization pipelines operate on three basic types of regions.
   collections, but blocks are defined by the data set and their structures
   are considered to have some meaning.
 \end{description}
+The region metadata may also include the spatial range of each region.
+Such information is useful when performing operations with known spatial
+bounds.
 
 Region metadata can flow throughout the pipeline independently of data.  A
 general implementation to propagate region information and select regions
@@ -382,7 +385,9 @@ region they can generate, and that region gets passed down the pipeline.
 As the region passes through filters, they have the opportunity to change
 the region.  This could be because the filter is combining multiple regions
 from multiple inputs.  It could also be because the filter is generating a
-new topology, which has its own independent regions.
+new topology, which has its own independent regions.  It could also be
+because the filter transforms the data in space or removes data from a
+particular region in space.
 
 In the second \keyterm{update region} pass, the application decides what
 region of data it would like a sink to process.  This update region is then
@@ -394,13 +399,57 @@ data they must produce.
 In the final \keyterm{update data} pass, the actual data flows through the
 pipeline as described in Section~\ref{sec:ExecutionManagement}.
 
+\subsection{Time}
+\label{sec:Time}
+
+Until recently, visualization pipelines operated on data at a single
+snapshot in time.  Operating on data that evolved over time entailed an
+external mechanism executing the pipeline repeatedly over a sequence of
+time steps.  Such behavior arose from data sets being organized as a
+sequence of time steps and the abundance of visualization algorithms that
+are time invariant.
+
+Biddiscombe \etal\scite{Biddiscombe2007} present a method for time control
+directly in a visualization pipeline.  The basic approach is to add a time
+dimension to the region metadata described in Section~\ref{sec:Regions}.  A
+source declares what time steps are available, and each filter has the
+ability to augment that time during the update information pass.  Likewise
+in the update region pass each filter may request new or different time
+steps.  The region request may contain one or more time steps.
+
+These temporal regions enable filters that operate on data that changes
+over time.  For example, a temporal interpolator filter can estimate
+continuous time by requesting multiple time steps from upstream and
+interpolating the results for downstream components.
+
+Some algorithms, such as particle tracing, may need all data over all time.
+Although such a region may be requested by this mechanism, it is seldom
+feasible to load this much data at one time.  Instead, an algorithm may
+operate on a small number of time steps at one time, iterate over all time,
+and accumulate the results.  To support this, Biddiscombe
+\etal\scite{Biddiscombe2007} also propose a \keyterm{continue executing}
+mode where a filter, while computing data, can request a re-execution of
+the upstream pipeline with different time steps and then continue to
+compute with the new data.
+
 \subsection{Contracts}
 \label{sec:Contracts}
 
-impact, contract
+Contracts\lcite{Childs2005} provide a generalized way for a filter to report
+its \keyterm{impact}, the required data and operating modes, before the
+filter processes data.  An impact may include the regions, variables, and
+time step a filter expects to work on.  The impact might also include
+operating restrictions such as whether the filter supports streaming or
+requires ghost cells.
 
-\subsection{Time}
-\label{sec:Time}
+Filters declare their impact by modifying a \keyterm{contract} object.  The
+contract is a data structure containing information about all the potential
+meta-information the pipeline executive can use to manage execution.  The
+contract object is passed up the pipeline in the same way an update region
+would be passed up as depicted in
+Figure~\ref{fig:RegionPasses:UpdateRegion}.  As the contract moves up the
+pipeline, filters add their impacts to it, forming a union of the
+requirements, abilities, and limitations of the pipeline.
 
 \subsection{Prioritized Streaming}
 \label{sec:PrioritizedStreaming}
