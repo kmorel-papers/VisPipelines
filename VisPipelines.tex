@@ -511,8 +511,39 @@ provides a general overview visualization that can be immediately useful.
 Finer sub-regions are progressively streamed in with the aforementioned
 priorities.
 
-\subsection{Query Driven Visualization}
+\subsection{Query-Driven Visualization}
 \label{sec:QueryDrivenVisualization}
+
+\keyterm{Query-driven visualization} enables one to analyze a large data
+set by identifying ``interesting'' data that matches some specified
+criteria\lcite{Stockinger2005,Gosink2008}.  The technique is based off the
+ability to quickly load small selections of data with arbitrary
+specification.  This ability provides a much faster iterative analysis than
+the classical analysis of loading large domains and sifting through the
+data.  Performing query-driven visualization in a pipeline requires three
+technologies: file indexing, a query language, and a pipeline metadata
+mechanism to pass a query from sink to source.
+
+Visualization queries rely on fast retrieval of data that matches the
+query.  Queries can be based on combinations of numerous fields.  Thus, the
+pipeline source must be able to identify where the pertinent data is
+located without reading the entire file.  Although tree-based approaches
+have been proposed\lcite{Chiang1998}, indexing techniques like
+FastBit\lcite{FastBit,Wu2010} are most effective because they can handle an
+arbitrary amount of dimensions.
+
+A user needs a language or interface with which to specify a query.
+Stockinger \etal\scite{Stockinger2005} propose compound Boolean expressions
+such as all regions where $(\mathrm{temperature} > 1000\mathrm{K}) \;
+\mathrm{AND} \; (70\mathrm{kPa} < \mathrm{pressure} < 90\mathrm{kPa})$.
+Others add to the query capabilities with file-globbing like
+expressions\lcite{Glatter2008} and predicate-based
+languages\lcite{Johnson2009}.
+
+Finally, the visualization pipeline must pass the query from the sink to
+the source.  This is done by expanding either region metadata
+(Section~\ref{sec:Regions}) or contracts (Section~\ref{sec:Contracts}) to
+pass and adjust the field ranges in the query\lcite{Rubel2008}.
 
 
 \section{Parallel Execution}
