@@ -305,12 +305,13 @@ A rudimentary but effective way of performing out-of-core processing in a
 visualization pipeline is to read data in pieces and let each piece flow
 through the pipe independently.  Because pieces are fed into the pipeline
 sequentially, this method of execution is often called \keyterm{streaming}.
-In order for streaming to be feasible, the data must be separable (that is,
-can be split into pieces), and the algorithm results must be invariant to
-the number and order of the pieces (that is, each piece can be computed
-independently).  In a demand-driven pipeline, it is also necessary to be
-able to identify what piece of input is required to process some piece of
-output\lcite{Law1999}.
+Streaming can only work on certain algorithms.  The algorithms must be
+\keyterm{separable} (that is, can break the work into pieces and work on
+one piece at a time), and the algorithms must be \keyterm{result invariant}
+(that is, the order in which pieces are processed does not matter).  In a
+demand-driven pipeline, it is also necessary that the algorithm is
+\keyterm{mappable} in that it is able to identify what piece of input is
+required to process each piece of output\lcite{Law1999}.
 
 Because the input data set is broken into pieces, the boundary between
 pieces is important for many algorithms.  Boundaries are often handled by
@@ -548,8 +549,136 @@ pass and adjust the field ranges in the query\lcite{Rubel2008}.
 \section{Parallel Execution}
 \label{sec:ParallelExecution}
 
+Scientific visualization has a long history of using high performance
+parallel computing to handle large-scale data.  Visualization pipelines
+often encompass parallel computing capabilities.
+
 \subsection{Basic Parallel Execution Modes}
 \label{sec:ParallelExecution:Modes}
+
+The most straightforward way to implement concurrency in a visualization
+pipeline is to modify the execution control to execute different components
+in the pipeline concurrently.  There are three basic modes to concurrent
+pipeline scheduling: task, pipeline, and data\lcite{Ahrens2000}.
+
+\subsubsection{Task Parallelism}
+\label{sec:TaskParallelism}
+
+\keyterm{Task parallelism} identifies independent portions of the pipeline
+and executes them concurrently.  Independent parts of the pipeline occur
+where sources produce data independently or where fan out feeds multiple
+components.
+
+\begin{figure}[htbp]
+  \centering
+  \begin{tabular}{@{}c@{\qquad}c@{\qquad}c@{}}
+    \makebox[1in]{} &
+    \makebox[1in]{} &
+    \makebox[1in]{} \\
+    $T = t_0$ & $T = t_1$ & $T = t_2$
+  \end{tabular}
+  \caption{Concurrent execution with task parallelism.  Boxes indicate a
+    region of the pipeline executed at a given time.}
+  \label{fig:TaskParallelism}
+\end{figure}
+
+Figure~\ref{fig:TaskParallelism} demonstrates task parallelism applied to
+an example pipeline.  At time $t_0$ the two readers begin executing
+concurrently.  Once the first reader completes, at time $t_1$, both of its
+downstream components may begin executing concurrently.  The other reader
+and its downstream components may continue executing at this time, or they
+may sit idle if they have completed.  After all of its inputs complete, at
+time $t_2$, the renderer executes.
+
+Because task parallelism breaks a pipeline into independent sub-pipelines
+to execute concurrently, task parallelism can be applied to any type of
+algorithm.  However, there are practical limits on how much concurrency
+can be achieved with task parallelism.  Visualization pipelines in real
+working environments can seldom be broken into more than a handful of
+independent sub-pipelines.  Load balancing is also an issue.  Concurrently
+running sub-pipelines are unlikely to finish simultaneously.
+
+\subsubsection{Pipeline Parallelism}
+\label{sec:PipelineParallelism}
+
+\keyterm{Pipeline parallelism} uses streaming to read data in pieces and
+executes different components of the pipeline concurrently on different
+pieces of data.  Pipeline parallelism is related to out-of-core processing
+in that a pipeline component is processing only a portion of the data at
+any one time, but in the pipeline-parallelism approach multiple pieces are
+loaded so that a component can process the next piece while downstream
+components process the proceeding one.
+
+\begin{figure}[htbp]
+  \centering
+  \begin{tabular}{@{}c@{\qquad}c@{\qquad}c@{\qquad}c@{}}
+    \makebox[1in]{} &
+    \makebox[1in]{} &
+    \makebox[1in]{} &
+    \makebox[1in]{} \\
+    $T = t_0$ & $T = t_1$ & $T = t_2$ & $T= t_3$
+  \end{tabular}
+  \caption{Concurrent execution with pipeline parallelism.  Boxes indicate
+    a region of the pipeline executed at a given time with the piece number
+    annotated.}
+  \label{fig:PipelineParallelism}
+\end{figure}
+
+Figure~\ref{fig:PipelineParallelism} demonstrates pipeline parallelism
+applied to an example pipeline.  At time $t_0$ the reader loads the first
+piece of data.  At time $t_1$, the loaded piece is passed to the filter
+where it is processed while the second piece is loaded by the reader.
+Processing continues with each component working on the available piece
+while the upstream components work on the next pieces.
+
+Pipeline parallelism enables all the components in the pipeline to be
+running concurrently.  Thus, pipeline parallelism tends to exhibit more
+concurrency than task parallelism, but the amount of concurrency is still
+severely limited by the number of components in the pipeline, which is
+rarely much more than ten in practice.  Load balancing is also an issue as
+different components are seldom expected to finish in the same length of
+time.  More compute intensive algorithms will stall the rest of the
+pipeline.  Also, because pipeline parallelism is a form of streaming, it is
+limited to algorithms that are separable, result invariant, and mappable,
+as described in Section~\ref{sec:OutOfCore}.
+
+\subsubsection{Data Parallelism}
+\label{sec:DataParallelism}
+
+\begin{figure}[htbp]
+  \centering
+  \caption{Concurrent execution with pipeline parallelism.  Boxes represent
+    separate processes, each with its own partition of data.  Communication
+    among processes may also occur.}
+  \label{fig:DataParallelism}
+\end{figure}
+
+\keyterm{Data parallelism} partitions the input data into some set number
+of pieces.  It then replicates the pipeline for each piece and executes
+them concurrently, as shown in Figure~\ref{fig:DataParallelism}.
+
+Of the three modes of concurrent scheduling, data parallelism is the most
+widely used.  The amount of concurrency is limited only by the number of
+pieces the data can be split into, and for large-scale data that number is
+very high.  Data parallelism also works well on distributed memory parallel
+computers; data generally only needs to be partitioned once before
+processing begins.  Data-parallel pipelines also tend to be well load
+balanced; identical algorithms running on equal sized inputs tend to
+complete in about the same amount of time.
+
+Data parallelism is easiest to implement with algorithms that exhibit the
+separable, result invariant, and mappable criteria of streaming execution.
+In this case, the algorithm can be executed in data parallel mode with
+little if any change.  However, it is possible to implement non-separable,
+non-result-invariant algorithms with data parallel execution.  In this
+case, the data-parallel pipelines must allow communication among the
+processes executing a given component and the parallel executive must
+ensure that all pipelines get executed simultaneously lest the
+communication deadlock.  Common examples of algorithms that have special
+data-parallel implementations are streamlines\lcite{Pugmire2009} and
+connected components\lcite{Moreland2008}.  Data-parallel pipelines also
+require special rendering for the partitioned data, which is described in
+the following section.
 
 \subsection{Rendering}
 \label{sec:ParallelExecution:Rendering}
