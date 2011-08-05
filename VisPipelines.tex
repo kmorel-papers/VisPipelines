@@ -731,6 +731,27 @@ data-parallel pipelines.
 \subsection{Hybrid Parallel}
 \label{sec:HybridParallel}
 
+Until recently, most high performance computers had distributed nodes with
+each node containing some small amount of cores each.  These computers
+could be effectively driven by treating each core as a distinct
+distributed-memory process.
+
+However, that trend is changing.  Current high performance computers now
+typically have 8--12 cores per node, and that number is expected to grow
+dramatically\lcite{ExascaleRoadMap,ASCACSummaryReport2010,ScientificDiscoveryExascale2011}.
+When this many cores are contained in a node, it is often more efficient to
+use \keyterm{hybrid parallelism} that considers both the distributed memory
+parallelism among the nodes and the shared memory parallelism within each
+node\lcite{Cappello2000}.  Recent development shows that pipeline
+components with hybrid parallelism can out perform their corresponding
+components considering each core as a separate distributed memory
+node\lcite{Li2008,Camp2010,Howison2011}.
+
+It should be noted that current implementations of hybrid parallelism are
+not a feature of the visualization pipeline.  Rather, hybrid parallelism is
+implemented by creating components with algorithms that perform shared
+memory parallelism.  The data-parallel pipeline then provides distributed
+memory parallelism on top of that.
 
 \section{Miscellany}
 \label{sec:Misc}
