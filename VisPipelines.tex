@@ -572,9 +572,9 @@ components.
 \begin{figure}[htbp]
   \centering
   \begin{tabular}{@{}c@{\qquad}c@{\qquad}c@{}}
-    \makebox[1in]{} &
-    \makebox[1in]{} &
-    \makebox[1in]{} \\
+    \includegraphics[scale=.65]{images/TaskParallel0} &
+    \includegraphics[scale=.65]{images/TaskParallel1} &
+    \includegraphics[scale=.65]{images/TaskParallel2} \\
     $T = t_0$ & $T = t_1$ & $T = t_2$
   \end{tabular}
   \caption{Concurrent execution with task parallelism.  Boxes indicate a
@@ -612,10 +612,10 @@ components process the proceeding one.
 \begin{figure}[htbp]
   \centering
   \begin{tabular}{@{}c@{\qquad}c@{\qquad}c@{\qquad}c@{}}
-    \makebox[1in]{} &
-    \makebox[1in]{} &
-    \makebox[1in]{} &
-    \makebox[1in]{} \\
+    \includegraphics[scale=.65]{images/PipelineParallel0} &
+    \includegraphics[scale=.65]{images/PipelineParallel1} &
+    \includegraphics[scale=.65]{images/PipelineParallel2} &
+    \includegraphics[scale=.65]{images/PipelineParallel3} \\
     $T = t_0$ & $T = t_1$ & $T = t_2$ & $T= t_3$
   \end{tabular}
   \caption{Concurrent execution with pipeline parallelism.  Boxes indicate
@@ -647,6 +647,7 @@ as described in Section~\ref{sec:OutOfCore}.
 
 \begin{figure}[htbp]
   \centering
+  \includegraphics[scale=.65]{images/DataParallel}
   \caption{Concurrent execution with pipeline parallelism.  Boxes represent
     separate processes, each with its own partition of data.  Communication
     among processes may also occur.}
@@ -660,7 +661,7 @@ them concurrently, as shown in Figure~\ref{fig:DataParallelism}.
 Of the three modes of concurrent scheduling, data parallelism is the most
 widely used.  The amount of concurrency is limited only by the number of
 pieces the data can be split into, and for large-scale data that number is
-very high.  Data parallelism also works well on distributed memory parallel
+very high.  Data parallelism also works well on distributed-memory parallel
 computers; data generally only needs to be partitioned once before
 processing begins.  Data-parallel pipelines also tend to be well load
 balanced; identical algorithms running on equal sized inputs tend to
@@ -682,6 +683,45 @@ the following section.
 
 \subsection{Rendering}
 \label{sec:ParallelExecution:Rendering}
+
+Data parallel pipelines, particularly those running on distributed-memory
+parallel computers, require special consideration when rendering images,
+which is often the sink operation in a visualization pipeline.  As in any
+part of the data parallel pipeline, the rendering component does not have
+complete access to the data.  Rather, the data is partitioned among a
+number of replicated components.  In the case of rendering, this
+component's processes must work together to form a single image from these
+distributed data.
+
+A straightforward approach is to collect the data to a single process and
+render them serially\lcite{Miller1998,Johnson1999}.  This collection is
+sometimes feasible when rendering surfaces because the surface geometry
+tends to be significantly smaller than the volumes from which it is
+derived.  However, geometry for large-scale data can still exceed a single
+processor's limits, and the approach is generally impractical for volume
+rendering techniques that require data for entire volumes.  Thus,
+collecting data can become intractable.
+
+A better approach is to employ a parallel rendering algorithm.
+Data-parallel pipelines are most often used with a class of parallel
+rendering algorithms called \keyterm{sort last}\lcite{Molnar1994}.
+Sort-last parallel rendering algorithms are characterized by each process
+first independently and concurrently rendering its local data into its own
+local image and then collectively combining these locally generated images
+into a single cohesive image.
+
+Although it is possible to use other types of parallel rendering algorithms
+with visualization pipelines\lcite{Moreland2003}, the properties of
+sort-last algorithms make them most ideal for use in visualization
+pipelines.  Sort-last rendering allows processes to render local data
+without concern about the partitioning (although there are caveats
+concerning transparent objects\lcite{Moreland2007}).  Such behavior makes
+the rendering easy to adapt to whatever partition is created by the
+data-parallel pipeline.  Also, the parallel overhead for sort-last
+rendering is independent of the amount of data being rendered, and sort
+last scales well with regard to the number of processes\lcite{Wylie2001}.
+Thus, sort-last's parallel scalability matches the parallel scalability of
+data-parallel pipelines.
 
 \subsection{Scalability}
 \label{sec:Scalability}

@@ -11,6 +11,14 @@ set(images
   images/UpdateInformation.pdf
   images/UpdateRegion.pdf
   images/UpdateData.pdf
+  images/TaskParallel0.pdf
+  images/TaskParallel1.pdf
+  images/TaskParallel2.pdf
+  images/PipelineParallel0.pdf
+  images/PipelineParallel1.pdf
+  images/PipelineParallel2.pdf
+  images/PipelineParallel3.pdf
+  images/DataParallel.pdf
   )
 
 add_latex_document(VisPipelines.tex
