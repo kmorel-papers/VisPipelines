@@ -677,9 +677,14 @@ processes executing a given component and the parallel executive must
 ensure that all pipelines get executed simultaneously lest the
 communication deadlock.  Common examples of algorithms that have special
 data-parallel implementations are streamlines\lcite{Pugmire2009} and
-connected components\lcite{Moreland2008}.  Data-parallel pipelines also
-require special rendering for the partitioned data, which is described in
-the following section.
+connected components\lcite{Moreland2008:UltraVis}.  Data-parallel pipelines
+also require special rendering for the partitioned data, which is described
+in the following section.
+
+Data-parallel pipelines are shown to be very scalable.  They have been
+successfully ported to current
+supercomputers\lcite{Moreland2008:CUG,Pugmire2008,Patchett2009} and have
+demonstrated excellent parallel speedup\lcite{Childs2010,Moreland2010}.
 
 \subsection{Rendering}
 \label{sec:ParallelExecution:Rendering}
@@ -722,9 +727,6 @@ rendering is independent of the amount of data being rendered, and sort
 last scales well with regard to the number of processes\lcite{Wylie2001}.
 Thus, sort-last's parallel scalability matches the parallel scalability of
 data-parallel pipelines.
-
-\subsection{Scalability}
-\label{sec:Scalability}
 
 \subsection{Hybrid Parallel}
 \label{sec:HybridParallel}
