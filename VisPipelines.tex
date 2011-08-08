@@ -759,10 +759,40 @@ memory parallelism on top of that.
 \subsection{Provenance}
 \label{sec:Provenance}
 
-\subsection{Scheduling}
-\label{sec:Scheduling}
+\subsection{Scheduling on Heterogeneous Systems}
+\label{sec:SchedulingHeterogeneous}
 
-Multi-core.  Heterogeneous.  Hyperflow.
+Computer architecture is rapidly moving to heterogeneous architecture.  GPU
+units with general-purpose computing capabilities are already common, and
+the use of similar accelerator units is likely to
+grow\lcite{ExascaleRoadMap,ExascaleArchitecturesReport}.
+
+Heterogeneous architectures introduce significant complications when
+managing pipeline execution.  The algorithms in different pipeline
+components may need to run on different types of processors.  If an
+algorithm is capable of running on different types of processors, it will
+have different performance characteristics on each one, which complicates
+load balancing.
+
+Furthermore, heterogeneous architectures typically have a more complicated
+memory hierarchy.  For example, a CPU and GPU on the same system usually
+have mutually inaccessible memory.  Even when memory is shared, there is
+typically an \keyterm{affinity} to some section of memory, meaning that
+data in some parts of memory can be accessed faster than data in other
+parts of memory.  All this means that the pipeline execution must also
+consider data location.
+
+Hyperflow\lcite{VoPhD} is an emerging technology to address these issues.
+Hyperflow manages parallel pipeline execution on heterogeneous systems.  It
+combines all three modes of parallel execution (task, pipeline, and data
+described in Section~\ref{sec:ParallelExecution:Modes}) along with
+out-of-core streaming (described in Section~\ref{sec:OutOfCore}) to
+dynamically allocate work based on thread availability and data location.
+
+\fix{To my knowledge there is not yet a publication of hyperflow other than
+  Huy's dissertation.  However, I'm sure Huy and Claudio are submitting it
+  if it has not already been accepted.  Perhaps it will show up at IEEE
+  Vis.}
 
 \subsection{In Situ}
 \label{sec:InSitu}
