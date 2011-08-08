@@ -756,8 +756,37 @@ memory parallelism on top of that.
 \section{Miscellany}
 \label{sec:Misc}
 
+This section describes emerging features of visualization pipelines that do
+not fit cleanly in any of the previous sections.
+
 \subsection{Provenance}
 \label{sec:Provenance}
+
+Throughout this document we have considered the visualization pipeline as a
+static thing that transforms data.  However, in real visualization
+applications, the exploratory process involves making changes to the
+visualization pipeline (i.e. adding and removing components or making
+parameter changes).  It is therefore possible to model exploration as
+transformations to the visualization pipeline\lcite{JankunKelly2002}.  This
+\keyterm{provenance} of exploratory visualization can be captured and
+exploited.
+
+Provenance of pipeline transformations can assist exploratory visualization
+in many ways.  Provenance allows users to quickly explore multiple
+visualization methods and compare various parameter
+changes\lcite{Bavoil2005}.  It also assists in reproducibility; because
+provenance records the steps required to achieve a particular
+visualization, it can be saved to automate the same visualization
+later\lcite{Silva2007}.
+
+Provenance information engenders the rare ability to perform analysis of
+analysis, which allows for powerful supporting abilities.  Provenance
+information can be compared and combined to provide revisioning information
+for collaborative analysis tasks\lcite{Ellkvist2008}.  Provenance
+information from previous analyses can be mined for future exploration.
+Such data can be queried for apropos visualization
+pipelines\lcite{Scheidegger2007} or used to automatically assist users in
+their exploratory endeavors\lcite{Koop2008}.
 
 \subsection{Scheduling on Heterogeneous Systems}
 \label{sec:SchedulingHeterogeneous}

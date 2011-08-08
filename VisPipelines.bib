@@ -42,12 +42,13 @@
 	synopsis = "Early paper on the AVS system.  Interesting features are descriptions of the visualization workflow that still feel relevant today and descriptions of visualization pipeline components that are still used (for example in VTK) such as mappers and renderers."
 )
 
-@techreport(OpenDX,
+@inproceedings(OpenDX,
 	author = "Greg Abram and Lloyd A. Treinish",
 	title = "An Extended Data-Flow Architecture for Data Analysis and Visualization",
-	institution = "IBM Thomas J. Watson Research Center",
-	number = "RC 20001 (88338)",
-	year = "1995"
+	booktitle = "Proceedings of Visualization '95",
+	month = "October",
+	year = "1995",
+	pages = "263--270"
 )
 
 @book(OpenDXGuide,
@@ -548,6 +549,74 @@
 	month = "January",
 	year = "2011",
 	note = "DOI=10.1109/TVCG.2011.24"
+)
+
+@article(Koop2008,
+	author = "David Koop and Carlos E. Scheidegger and Steven P. Callahan and Juliana Freire and {Cl\'{a}udio} T. Silva",
+	title = "{VisComplete}: Automating Suggestions for Visualization Pipelines",
+	journal = "IEEE Transactions on Visualization and Computer Graphics",
+	volume = "14",
+	number = "6",
+	month = "November/December",
+	year = "2008",
+	pages = "1691--1698",
+	synopsis = "Using provenance data to automatically provide suggestions for vis pipelines."
+)
+
+@inproceedings(Ellkvist2008,
+	author = {Tommy Ellkvist and David Koop and Erik W. Anderson and Juliana Freire and {Cl\'{a}udio} Silva},
+	title = {Using Provenance to Support Real-Time Collaborative Design of Workflows},
+	booktitle = {Proceedings of the International Provenance and Annotation Workshop},
+	series = {Lecture Notes in Computer Science},
+	publisher = {Springer},
+	volume = {5272},
+	pages = {266--279},
+	year = {2008},
+	note = {DOI=10.1007/978-3-540-89965-5\_27},
+	synopsis = {Using provenance to express revisions in a collaborative visualization design.}
+)
+
+@article(Silva2007,
+	author = {{Cl\'{a}udio} T. Silva and Juliana Freire and Steven P. Callahan},
+	title = {Provenance for Visualizations: Reproducibility and Beyond},
+	journal = {Computing in Science \& Engineering},
+	volume = {9},
+	number = {5},
+	month = {September/October},
+	year = {2007},
+	pages = {82--89},
+	note = {DOI=10.1109/MCSE.2007.106}
+)
+
+@article(Scheidegger2007,
+	author = {Carlos E. Scheidegger and Huy T. Vo and David Koop and Juliana Freire and {Cl\'{a}udio} T. Silva},
+	title = {Querying and Creating Visualizations by Analogy},
+	volume = {13},
+	number = {6},
+	month = {November/December},
+	year = {2007},
+	pages = {1560--1567},
+	synopsis = {Using provenance to query for pipelines that meet certain criteria.}
+)
+
+@inproceedings(Bavoil2005,
+	author = {Louis Bavoil and Steven P. Callahan and Patricia J. Crossno and Juliana Freire and Carlos E. Scheidegger and {Cl\'{a}udio T. Silva} and Huy T. Vo},
+	title = {{VisTrails}: Enabling Interactive Multiple-View Visualizations},
+	booktitle = {Proceedings of IEEE Visualization},
+	month = {October},
+	year = {2005},
+	pages = {135--142},
+	synopsis = {Original VisTrails paper.}
+)
+
+@inproceedings(JankunKelly2002,
+	author = {T.J. Jankun-Kelly and Kwan-Liu Ma and Michael Gertz},
+	title = {A Model for the Visualization Exploration Process},
+	booktitle = {Proceedings of IEEE Visualization 2002},
+	month = {October},
+	year = {2002},
+	pages = {323--330},
+	synopsis = {Early paper modeling iterative visualization process as transformations of the visualization pipeline.}
 )
 
 @techreport(ExascaleRoadMap,
