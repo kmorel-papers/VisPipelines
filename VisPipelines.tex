@@ -684,7 +684,10 @@ in the following section.
 Data-parallel pipelines are shown to be very scalable.  They have been
 successfully ported to current
 supercomputers\lcite{Moreland2008:CUG,Pugmire2008,Patchett2009} and have
-demonstrated excellent parallel speedup\lcite{Childs2010,Moreland2010}.
+demonstrated excellent parallel speedup\lcite{Childs2010}.
+
+\fix{The Gordon Bell submission will be a good reference here once it is
+  published.}
 
 \subsection{Rendering}
 \label{sec:ParallelExecution:Rendering}
@@ -825,6 +828,36 @@ dynamically allocate work based on thread availability and data location.
 
 \subsection{In Situ}
 \label{sec:InSitu}
+
+\keyterm{In situ visualization} refers to visualization that is run in
+tandem with the simulation that is generating the results being
+visualized.  There are multiple approaches to in situ visualization.  Some
+directly share memory space whereas others share data through high speed
+message passing.  Nevertheless, all in situ visualization systems share two
+properties: the simulation and the visualization are run concurrently (or
+equivocally with appropriate time slices) and the passing of data from
+simulation to visualization bypasses the costly step of writing to or
+reading from a file on disk.
+
+The concept of in situ visualization is as old as the field of
+visualization itself\lcite{ViSC1987}.  However, the interest in in situ
+visualization has grown significantly in recent years.  Recent studies show
+that the cost of dedicated interactive visualization computers is
+increasing\lcite{Childs2007} and that the time spent in writing data to and
+reading data from disk storage is beginning to dominate the time spent in
+both the simulation and the
+visualization\lcite{Ross2008,Peterka2008,Peterka2009}.  Consequently, in
+situ visualization is one of the most important research topics in large
+scale visualization today%
+\lcite{VisualizationKnowledgeDiscovery2007,ScientificDiscoveryExascale2011}.
+
+In situ visualization does not involve visualization pipelines per se.  In
+principle any visualization architecture can be coupled with a simulation.
+However, many current projects are using visualization pipelines for in
+situ visualization%
+\lcite{Johnson1999,VisItLibsim,Biddiscombe2011,Klasky2011,Fabian2011}
+because of the visualization pipeline's flexibility and the abundance of
+existing implementations.
 
 
 \section{Visualization Pipeline Alternatives}
