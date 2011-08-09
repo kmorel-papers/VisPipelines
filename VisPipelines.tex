@@ -128,22 +128,24 @@ advancements introduced over the years and current research.
 \section{Basic Visualization Pipelines}
 \label{sec:BasicVisualizationPipelines}
 
-A visualization pipeline encapsulates an algorithm in one of three types of
-objects: \keyterm{sources}, \keyterm{filters}, and \keyterm{sinks}.  A
-source object produces data that it makes available through an
-\keyterm{output}.  File readers and synthetic data generators are typical
-source objects.  A sink object accepts data through an \keyterm{input} and
-performs an operation with no further result (as far as the pipeline is
-concerned).  Typical sinks are file writers and rendering components that
-provide images to a user interface.  A filter object has at least one input
-from which it transform data and provides results through at least one
-output.
+A visualization pipeline embodies a \keyterm{dataflow network} in which
+computation is described as a collection of executable \keyterm{modules}
+that are connected in a directed graph representing how data moves between
+modules.  There are three types of modules: \keyterm{sources},
+\keyterm{filters}, and \keyterm{sinks}.  A source module produces data that
+it makes available through an \keyterm{output}.  File readers and synthetic
+data generators are typical source modules.  A sink module accepts data
+through an \keyterm{input} and performs an operation with no further result
+(as far as the pipeline is concerned).  Typical sinks are file writers and
+rendering modules that provide images to a user interface.  A filter
+module has at least one input from which it transform data and provides
+results through at least one output.
 
 The intention is to encapsulate algorithms in interchangeable source,
-filter, and sink components with generic connection ports (inputs and
-outputs).  An output from one component can be connected to the input from
-another component such that the results of one algorithm become the inputs
-to another algorithm.  These connected components form a
+filter, and sink modules with generic connection ports (inputs and
+outputs).  An output from one module can be connected to the input from
+another module such that the results of one algorithm become the inputs
+to another algorithm.  These connected modules form a
 \keyterm{pipeline}.  Figure~\ref{fig:SimplePipeline} demonstrates a simple
 but common pipeline featuring a file reader (source), an isosurface
 generator\lcite{Lorensen1987} (filter), and an image renderer (sink).
@@ -155,13 +157,13 @@ generator\lcite{Lorensen1987} (filter), and an image renderer (sink).
   \label{fig:SimplePipeline}
 \end{figure}
 
-Pipeline components are highly interchangeable.  Any two components can be
+Pipeline modules are highly interchangeable.  Any two modules can be
 connected so long as the data in the output is compatible with the expected
 data of the downstream input.  Pipelines can be arbitrarily deep.
 Pipelines can also branch.  A \keyterm{fan out} occurs when the output of
-one component is connected to the inputs of multiple other components.  A
-\keyterm{fan in} occurs when a component accepts multiple inputs that can
-come from separate component outputs.  Figure~\ref{fig:BranchingPipeline}
+one module is connected to the inputs of multiple other modules.  A
+\keyterm{fan in} occurs when a module accepts multiple inputs that can
+come from separate module outputs.  Figure~\ref{fig:BranchingPipeline}
 demonstrates a pipeline with branching (adapted from the ParaView
 tutorial\lcite{ParaViewTutorial}).
 
@@ -176,7 +178,7 @@ tutorial\lcite{ParaViewTutorial}).
   \label{fig:BranchingPipeline}
 \end{figure}
 
-For more information on using visualization pipelines and the components
+For more information on using visualization pipelines and the modules
 they typically contain, consult the documentation for one of the numerous
 libraries or applications using a visualization
 pipeline\lcite{VTK,ParaView,ParaViewTutorial,SCIRunUserGuide,IRISExplorerUsersGuide,VisTrailsDocumentation,OpenDXGuide}.
@@ -186,8 +188,8 @@ pipeline\lcite{VTK,ParaView,ParaViewTutorial,SCIRunUserGuide,IRISExplorerUsersGu
 \label{sec:ExecutionManagement}
 
 The topology of a pipeline dictates the flow of data and places constraints
-on the order in which components can be executed, but it does not determine
-how or when components get executed.  Visualization pipeline systems can
+on the order in which modules can be executed, but it does not determine
+how or when modules get executed.  Visualization pipeline systems can
 vary significantly in how they manage execution.
 
 \subsection{Execution Drivers}
@@ -196,30 +198,30 @@ vary significantly in how they manage execution.
 The visualization pipeline represents a static network of operations
 through which data flows.  Typical usage entails first establishing the
 visualization pipeline and then executing the pipeline on one or more data
-collections.  Consequently, the behavior of when components get executed is
+collections.  Consequently, the behavior of when modules get executed is
 a primary feature of visualization pipeline systems.  Visualization
 pipelines generally fall under two execution systems: event driven and
 demand driven.
 
 An \keyterm{even-driven} pipeline launches execution as data becomes
 available in sources.  When new data becomes available in a source, that
-source component must be alerted.  When sources produce data, they push it
-to the downstream components and trigger an event to execute them.  Those
-downstream components in turn may produce their own data to push to the
-next component.  Because the method of the event-driven pipeline is to push
-data to the downstream components, this method is also known as the
+source module must be alerted.  When sources produce data, they push it
+to the downstream modules and trigger an event to execute them.  Those
+downstream modules in turn may produce their own data to push to the
+next module.  Because the method of the event-driven pipeline is to push
+data to the downstream modules, this method is also known as the
 \keyterm{push model}.  The event-driven method of execution is useful when
 applying a visualization pipeline to data that is expected to change over
 time.
 
 A \keyterm{demand-driven} pipeline launches execution in response to
 requests for data.  Execution is initiated at the bottom of the pipeline in
-a sink.  The sink's upstream components satisfy this request by first
-requesting data from their upstream components, and so on up to the
+a sink.  The sink's upstream modules satisfy this request by first
+requesting data from their upstream modules, and so on up to the
 sources.  Once execution reaches a source, it produces data and returns
-execution back to its downstream components.  The execution eventually
+execution back to its downstream modules.  The execution eventually
 unrolls back to the originating sink.  Because the method of the
-demand-driven pipeline is to pull data from the upstream components, this
+demand-driven pipeline is to pull data from the upstream modules, this
 method is also known as the \keyterm{pull model}.  The demand-driven method
 of execution is useful when using a visualization pipeline to provide data
 to an end system.  For example, the visualization could respond to render
@@ -228,15 +230,15 @@ requests to update a GUI.
 \subsection{Caching Intermediate Values}
 \label{sec:Caching}
 
-Caching, which saves component execution outputs, is an important feature
+Caching, which saves module execution outputs, is an important feature
 for both execution methods.  In the case of the event-driven pipeline, a
-component may execute only when data from all inputs is pushed to it.
+module may execute only when data from all inputs is pushed to it.
 Thus, the execution must know when to cache the data and where to retrieve
 it when the rest of the data is later pushed.
 
-In the case of the demand-driven pipeline, a component with fan out could
-receive pull requests from multiple downstream components during the same
-original sink request.  Rather than execute multiple times, the component
+In the case of the demand-driven pipeline, a module with fan out could
+receive pull requests from multiple downstream modules during the same
+original sink request.  Rather than execute multiple times, the module
 can first check to see if the previously computed result is still valid and
 return that if possible.
 
@@ -244,32 +246,33 @@ Although caching all the intermediate values in a pipeline can remove
 redundant computation, it also clearly requires more storage.  Thus,
 managing the caching often involves a trade-off between speed and memory.
 The cost of caching can be mitigated by favoring shallow copies of data
-from a component's inputs to its outputs.
+from a module's inputs to its outputs.
 
 \subsection{Centralized vs. Distributed Control}
 \label{sec:CentralizedDistributed}
 
 The control mechanism for a visualization pipeline can be either
 centralized or distributed.  A \keyterm{centralized control} has a single
-unit managing the execution of all components in the pipeline.  The
-centralized control has links to all components, understands their
+unit managing the execution of all modules in the pipeline.  The
+centralized control has links to all modules, understands their
 connections, and initiates all execution in the pipeline.
 
-A \keyterm{distributed control} has a separate unit for each component in
+A \keyterm{distributed control} has a separate unit for each module in
 the pipeline.  The distributed control unit nominally knows only about a
-single component and its inputs and outputs.  The distributed control unit
-can initiate execution on only its own component and must send messages to
+single module and its inputs and outputs.  The distributed control unit
+can initiate execution on only its own module and must send messages to
 propagate execution elsewhere.
 
-Centralized control is advantageous in that it can perform a more
-thorough analysis of the pipeline's network to more finely control the
-execution.  Such knowledge can be useful in making decisions about caching
-(described in Section~\ref{sec:Caching}) and load balancing for parallel
-execution (described in Section~\ref{sec:ParallelExecution}).  However, the
+Centralized control is advantageous in that it can perform a more thorough
+analysis of the pipeline's network to more finely control the execution.
+Such knowledge can be useful in making decisions about caching (described
+in Section~\ref{sec:Caching}) and load balancing for parallel execution
+(described in Section~\ref{sec:ParallelExecution}).  However, the
 implementation of a centralized control is more complex because of the
-larger management task.  Distributed control, in contrast, has more limited
-knowledge of the pipeline, but tends to be simpler to implement and
-manage.
+larger management task.  Centralized control can also suffer from
+scalability problems when applied to large pipelines or across parallel
+computers.  Distributed control, in contrast, has more limited knowledge of
+the pipeline, but tends to be simpler to implement and manage.
 
 \subsection{Interchangeable Executive}
 \label{sec:InterchangeableExecutive}
@@ -286,7 +289,7 @@ pipeline, as demonstrated by Vo \etal\scite{Vo2010}.
 Replacing the executive in a pipeline with centralized control is
 straightforward.  The control is, by definition, its own separate unit.  In
 contrast, a distributed control system must have an independent executive
-object attached to each component in the pipeline.  The component objects
+object attached to each module in the pipeline.  The module objects
 get relegated to only a function to execute whereas the executive manages
 pipeline connections, data movement, and execution\lcite{VTKUsersGuide}.
 
@@ -334,7 +337,7 @@ in which a hierarchy of progressively finer grids selectively refines
 regions of interest.
 
 Many visualization algorithms can be applied independently to each block in
-a multi-block data set.  Rather than have every component specifically
+a multi-block data set.  Rather than have every module specifically
 attend to the multi-block nature of the data, the execution management can
 implicitly run an algorithm independently on every block in the data
 set\lcite{VTKUsersGuide}.
@@ -443,7 +446,7 @@ one or more time steps.
 These temporal regions enable filters that operate on data that changes
 over time.  For example, a temporal interpolator filter can estimate
 continuous time by requesting multiple time steps from upstream and
-interpolating the results for downstream components.
+interpolating the results for downstream modules.
 
 Some algorithms, such as particle tracing, may need all data over all time.
 Although such a region may be requested by this mechanism, it is seldom
@@ -557,7 +560,7 @@ often encompass parallel computing capabilities.
 \label{sec:ParallelExecution:Modes}
 
 The most straightforward way to implement concurrency in a visualization
-pipeline is to modify the execution control to execute different components
+pipeline is to modify the execution control to execute different modules
 in the pipeline concurrently.  There are three basic modes to concurrent
 pipeline scheduling: task, pipeline, and data\lcite{Ahrens2000}.
 
@@ -567,7 +570,7 @@ pipeline scheduling: task, pipeline, and data\lcite{Ahrens2000}.
 \keyterm{Task parallelism} identifies independent portions of the pipeline
 and executes them concurrently.  Independent parts of the pipeline occur
 where sources produce data independently or where fan out feeds multiple
-components.
+modules.
 
 \begin{figure}[htbp]
   \centering
@@ -585,8 +588,8 @@ components.
 Figure~\ref{fig:TaskParallelism} demonstrates task parallelism applied to
 an example pipeline.  At time $t_0$ the two readers begin executing
 concurrently.  Once the first reader completes, at time $t_1$, both of its
-downstream components may begin executing concurrently.  The other reader
-and its downstream components may continue executing at this time, or they
+downstream modules may begin executing concurrently.  The other reader
+and its downstream modules may continue executing at this time, or they
 may sit idle if they have completed.  After all of its inputs complete, at
 time $t_2$, the renderer executes.
 
@@ -602,12 +605,12 @@ running sub-pipelines are unlikely to finish simultaneously.
 \label{sec:PipelineParallelism}
 
 \keyterm{Pipeline parallelism} uses streaming to read data in pieces and
-executes different components of the pipeline concurrently on different
+executes different modules of the pipeline concurrently on different
 pieces of data.  Pipeline parallelism is related to out-of-core processing
-in that a pipeline component is processing only a portion of the data at
+in that a pipeline module is processing only a portion of the data at
 any one time, but in the pipeline-parallelism approach multiple pieces are
-loaded so that a component can process the next piece while downstream
-components process the proceeding one.
+loaded so that a module can process the next piece while downstream
+modules process the proceeding one.
 
 \begin{figure}[htbp]
   \centering
@@ -628,15 +631,15 @@ Figure~\ref{fig:PipelineParallelism} demonstrates pipeline parallelism
 applied to an example pipeline.  At time $t_0$ the reader loads the first
 piece of data.  At time $t_1$, the loaded piece is passed to the filter
 where it is processed while the second piece is loaded by the reader.
-Processing continues with each component working on the available piece
-while the upstream components work on the next pieces.
+Processing continues with each module working on the available piece
+while the upstream modules work on the next pieces.
 
-Pipeline parallelism enables all the components in the pipeline to be
+Pipeline parallelism enables all the modules in the pipeline to be
 running concurrently.  Thus, pipeline parallelism tends to exhibit more
 concurrency than task parallelism, but the amount of concurrency is still
-severely limited by the number of components in the pipeline, which is
+severely limited by the number of modules in the pipeline, which is
 rarely much more than ten in practice.  Load balancing is also an issue as
-different components are seldom expected to finish in the same length of
+different modules are seldom expected to finish in the same length of
 time.  More compute intensive algorithms will stall the rest of the
 pipeline.  Also, because pipeline parallelism is a form of streaming, it is
 limited to algorithms that are separable, result invariant, and mappable,
@@ -673,7 +676,7 @@ In this case, the algorithm can be executed in data parallel mode with
 little if any change.  However, it is possible to implement non-separable,
 non-result-invariant algorithms with data parallel execution.  In this
 case, the data-parallel pipelines must allow communication among the
-processes executing a given component and the parallel executive must
+processes executing a given module and the parallel executive must
 ensure that all pipelines get executed simultaneously lest the
 communication deadlock.  Common examples of algorithms that have special
 data-parallel implementations are streamlines\lcite{Pugmire2009} and
@@ -695,10 +698,10 @@ demonstrated excellent parallel speedup\lcite{Childs2010}.
 Data parallel pipelines, particularly those running on distributed-memory
 parallel computers, require special consideration when rendering images,
 which is often the sink operation in a visualization pipeline.  As in any
-part of the data parallel pipeline, the rendering component does not have
+part of the data parallel pipeline, the rendering module does not have
 complete access to the data.  Rather, the data is partitioned among a
-number of replicated components.  In the case of rendering, this
-component's processes must work together to form a single image from these
+number of replicated modules.  In the case of rendering, this
+module's processes must work together to form a single image from these
 distributed data.
 
 A straightforward approach is to collect the data to a single process and
@@ -746,13 +749,13 @@ When this many cores are contained in a node, it is often more efficient to
 use \keyterm{hybrid parallelism} that considers both the distributed memory
 parallelism among the nodes and the shared memory parallelism within each
 node\lcite{Cappello2000}.  Recent development shows that pipeline
-components with hybrid parallelism can out perform their corresponding
-components considering each core as a separate distributed memory
+modules with hybrid parallelism can out perform their corresponding
+modules considering each core as a separate distributed memory
 node\lcite{Li2008,Camp2010,Howison2011}.
 
 It should be noted that current implementations of hybrid parallelism are
 not a feature of the visualization pipeline.  Rather, hybrid parallelism is
-implemented by creating components with algorithms that perform shared
+implemented by creating modules with algorithms that perform shared
 memory parallelism.  The data-parallel pipeline then provides distributed
 memory parallelism on top of that.
 
@@ -768,7 +771,7 @@ not fit cleanly in any of the previous sections.
 Throughout this document we have considered the visualization pipeline as a
 static thing that transforms data.  However, in real visualization
 applications, the exploratory process involves making changes to the
-visualization pipeline (i.e. adding and removing components or making
+visualization pipeline (i.e. adding and removing modules or making
 parameter changes).  It is therefore possible to model exploration as
 transformations to the visualization pipeline\lcite{JankunKelly2002}.  This
 \keyterm{provenance} of exploratory visualization can be captured and
@@ -777,7 +780,7 @@ exploited.
 Provenance of pipeline transformations can assist exploratory visualization
 in many ways.  Provenance allows users to quickly explore multiple
 visualization methods and compare various parameter
-changes\lcite{Bavoil2005}.  It also assists in reproducibility; because
+changes\lcite{VisTrails}.  It also assists in reproducibility; because
 provenance records the steps required to achieve a particular
 visualization, it can be saved to automate the same visualization
 later\lcite{Silva2007}.
@@ -801,7 +804,7 @@ grow\lcite{ExascaleRoadMap,ExascaleArchitecturesReport}.
 
 Heterogeneous architectures introduce significant complications when
 managing pipeline execution.  The algorithms in different pipeline
-components may need to run on different types of processors.  If an
+modules may need to run on different types of processors.  If an
 algorithm is capable of running on different types of processors, it will
 have different performance characteristics on each one, which complicates
 load balancing.
