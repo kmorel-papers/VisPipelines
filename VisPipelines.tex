@@ -12,7 +12,7 @@
 \usepackage{ifthen}
 \usepackage{cite}
 \usepackage{xspace}
-\usepackage{hyperref}
+\usepackage[pdfborder={0 0 0}]{hyperref}
 
 \usepackage{color}
 \definecolor{yellow}{rgb}{1,1,0}
@@ -866,10 +866,43 @@ existing implementations.
 \section{Visualization Pipeline Alternatives}
 \label{sec:Alternatives}
 
-\subsection{Field Abstraction}
-\label{sec:FieldAbstraction}
+Although visualization pipelines are the most widely used visualization
+framework, others exist and are being developed today.  This section
+contains a small sample of other visualization systems under current
+research and development.
 
-Field Model (FM).  Field Encapsulation Library (FEL).
+\subsection{Functional Field Model}
+\label{sec:FunctionalFieldModel}
+
+Most visualization systems represent fields as a data structure directly
+storing the value for the field at each appropriate place in the mesh.
+However, it is also possible to represent a field functionally.  That is,
+provide a function that accepts a mesh location as its input argument and
+returns the field value for that location as its output.  Functional fields
+are implemented in the Field Model (FM) library, a follow-on to the Field
+Encapsulation Library (FEL)\lcite{FELPaper}.
+
+A field function could be as simple as retrieving values from a data
+structure like that previously described, or it can abstract the data
+representation in many ways to simplify advanced visualization tasks.  For
+example, the field function could abstract the physical location of the
+data by paging it from disk as necessary\lcite{Cox1997}.
+
+Field functions also make it simple to define \keyterm{derived fields},
+that is fields computed from other fields.  Functions for derived fields
+can be composed together to create something very much like the dataflow
+network of a visualization pipeline.  The function composition, however,
+shares much of the behaviors of functional programming such as allowing for
+a lazy evaluation on a per-field-value basis\lcite{Moran1999}.
+
+The functional field model yields several advantages.  It has a simple lazy
+evaluation model\lcite{Moran1999}, it simplifies out-of-core
+paging\lcite{Cox1997}, and it tends to have low overhead, which can
+simplify using it in situ with simulation\lcite{Ellsworth2006}.  However,
+unlike the visualization pipeline, the dataflow for composed fields are
+fixed in a demand-driven, or pull, execution model.  Also, computation is
+limited to producing derived fields; there is no inherent mechanism to, for
+example, generate new topology.
 
 \subsection{MapReduce}
 \label{sec:MapReduce}
