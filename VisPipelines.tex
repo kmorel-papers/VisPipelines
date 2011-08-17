@@ -910,6 +910,36 @@ example, generate new topology.
 \subsection{MapReduce}
 \label{sec:MapReduce}
 
+\keyterm{MapReduce}\lcite{MapReduce} is a cloud-based, data-parallel
+infrastructure designed to process massive amounts of data quickly.
+Although it was originally designed for performing distributed database
+search capabilities, many researchers and developers have been successful
+at applying MapReduce to other problem domains and for more general-purpose
+programming\lcite{Olston2008,Isard2009}.  MapReduce garners much popularity
+due to its parallel scalability, its ability to run on inexpensive
+``share-nothing'' parallel computers, and its simplified programming model.
+
+As its name implies, the MapReduce framework runs programs in two phases: a
+map phase and a reduce phase.  In the \keyterm{map} phase, a user-provided
+function is applied independently and concurrently to all items in a set of
+data.  Each instance of the map function returns one or more $(key, value)$
+pairs.  In the \keyterm{reduce} phase, a user-provided function accepts all
+values with the same key and produces a result from them.  Implicit in the
+framework is a \keyterm{shuffle} of the $(key, value)$ pairs in between the
+map and reduce phases.
+
+MapReduce's versatility has enabled it to be applied to many scientific
+domains including visualization.  It has been used to both process
+geometry\lcite{VoPhD} and render\lcite{Stuart2010,VoPhD}.  The MapReduce
+framework allows visualization algorithms to be run in parallel in a much
+finer granularity than the parallel execution models of a visualization
+pipeline.  However, the constrains imposed by MapReduce make it more
+difficult to design visualization algorithms, and there is no inherent way
+to combine algorithms such as can be done in a visualization pipeline.
+
+\fix{There might be a MapReduce paper coming out in LDAV.  Should add that
+  above when possible.}
+
 \subsection{Worklets}
 \label{sec:Worklets}
 
