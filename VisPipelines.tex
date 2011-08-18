@@ -1,6 +1,6 @@
 % -*- latex -*-
 
-\documentclass{article}
+\documentclass[journal,onecolumn,12pt,letterpaper,twoside]{IEEEtran}
 
 \usepackage{amsfonts}
 \usepackage{amssymb}
@@ -31,6 +31,8 @@
 % any spacing.
 \newcommand*{\lcite}[1]{~\cite{#1}}
 \newcommand*{\scite}[1]{~\cite{#1}}
+
+\newcommand*{\figref}[1]{Fig.~\ref{#1}}
 
 \newcommand*{\keyterm}[1]{\emph{#1}}
 
@@ -71,11 +73,20 @@
 % to have its own page.
 \renewcommand{\floatpagefraction}{.75}
 
-\title{Modern Visualization Pipelines}
+\title{A Survey of Visualization Pipelines}
 
-\author{Kenneth Moreland}
+\author{Kenneth~Moreland,~\IEEEmembership{Member,~IEEE}%
+%
+\thanks{K. Moreland is with Sandia National Laboratories}
+}
 
 \date{}
+
+\markboth{%
+IEEE Transactions on Visualizations and Computer Graphics,~Vol.~X, No.~X,~Month~20XX%
+}{%
+Moreland: A Survey of Visualization Pipelines%
+}
 
 \sloppy
 
@@ -84,8 +95,7 @@
 \maketitle
 
 
-\section*{Abstract}
-
+\begin{abstract}
 The most common abstraction used by visualization libraries and
 applications today is what is known as the visualization pipeline.  The
 visualization pipeline provides a mechanism to encapsulate algorithms and
@@ -94,12 +104,17 @@ has been in existence for over twenty years, and over this time many
 variations and improvements have been proposed.  This paper provides a
 literature review of the most prevalent features of visualization pipelines
 and some of the most recent research directions.
+\end{abstract}
+
+\begin{keywords}
+  visualization pipelines, dataflow networks
+\end{keywords}
 
 
 \section{Introduction}
 \label{sec:Introduction}
 
-The field of scientific visualization was launched with the 1987 National
+\PARstart{T}{he} field of scientific visualization was launched with the 1987 National
 Science Foundation Visualization in Scientific Computing workshop
 report\lcite{ViSC1987}, and some of the first proposed frameworks used a
 \keyterm{visualization pipeline} for managing the ingestion,
@@ -146,7 +161,7 @@ filter, and sink modules with generic connection ports (inputs and
 outputs).  An output from one module can be connected to the input from
 another module such that the results of one algorithm become the inputs
 to another algorithm.  These connected modules form a
-\keyterm{pipeline}.  Figure~\ref{fig:SimplePipeline} demonstrates a simple
+\keyterm{pipeline}.  \figref{fig:SimplePipeline} demonstrates a simple
 but common pipeline featuring a file reader (source), an isosurface
 generator\lcite{Lorensen1987} (filter), and an image renderer (sink).
 
@@ -163,15 +178,15 @@ data of the downstream input.  Pipelines can be arbitrarily deep.
 Pipelines can also branch.  A \keyterm{fan out} occurs when the output of
 one module is connected to the inputs of multiple other modules.  A
 \keyterm{fan in} occurs when a module accepts multiple inputs that can
-come from separate module outputs.  Figure~\ref{fig:BranchingPipeline}
+come from separate module outputs.  \figref{fig:BranchingPipeline}
 demonstrates a pipeline with branching (adapted from the ParaView
 tutorial\lcite{ParaViewTutorial}).
 
 \begin{figure}[htbp]
   \centering
   \begin{tabular}{cc}
-    \includegraphics{images/BranchingPipeline} &
-    \includegraphics[height=1.7in]{images/BranchingPipelineResult}
+    \includegraphics[height=2.25in]{images/BranchingPipeline} &
+    \includegraphics[height=2.25in]{images/BranchingPipelineResult}
   \end{tabular}
   \caption{A visualization pipeline with branching.  The final
     visualization is shown to the right.}
@@ -203,7 +218,7 @@ a primary feature of visualization pipeline systems.  Visualization
 pipelines generally fall under two execution systems: event driven and
 demand driven.
 
-An \keyterm{even-driven} pipeline launches execution as data becomes
+An \keyterm{event-driven} pipeline launches execution as data becomes
 available in sources.  When new data becomes available in a source, that
 source module must be alerted.  When sources produce data, they push it
 to the downstream modules and trigger an event to execute them.  Those
@@ -365,7 +380,7 @@ management for out of core and parallel computation (described in Sections
 \ref{sec:OutOfCore} and \ref{sec:ParallelExecution}, respectively).
 
 Visualization pipelines operate on three basic types of regions.
-\begin{packeddescription}
+\begin{description}[\setlabelwidth{Extents}]
 \item[Extents] are valid index ranges for regular multidimensional arrays
   of data.  Extents allow a fine granularity in defining regions as
   sub-arrays within a larger array.
@@ -375,7 +390,7 @@ Visualization pipelines operate on three basic types of regions.
   Blocks are similar to pieces in that they can represent arbitrary
   collections, but blocks are defined by the data set and their structures
   are considered to have some meaning.
-\end{packeddescription}
+\end{description}
 The region metadata may also include the spatial range of each region.
 Such information is useful when performing operations with known spatial
 bounds.
@@ -383,7 +398,7 @@ bounds.
 Region metadata can flow throughout the pipeline independently of data.  A
 general implementation to propagate region information and select regions
 requires the three pipeline passes demonstrated in
-Figure~\ref{fig:RegionPasses}\lcite{Ahrens2001}.
+\figref{fig:RegionPasses}\lcite{Ahrens2001}.
 
 \begin{figure}[htbp]
   \centering
@@ -473,7 +488,7 @@ contract is a data structure containing information about all the potential
 meta-information the pipeline executive can use to manage execution.  The
 contract object is passed up the pipeline in the same way an update region
 would be passed up as depicted in
-Figure~\ref{fig:RegionPasses:UpdateRegion}.  As the contract moves up the
+\figref{fig:RegionPasses:UpdateRegion}.  As the contract moves up the
 pipeline, filters add their impacts to it, forming a union of the
 requirements, abilities, and limitations of the pipeline.
 
@@ -575,9 +590,9 @@ modules.
 \begin{figure}[htbp]
   \centering
   \begin{tabular}{@{}c@{\qquad}c@{\qquad}c@{}}
-    \includegraphics[scale=.65]{images/TaskParallel0} &
-    \includegraphics[scale=.65]{images/TaskParallel1} &
-    \includegraphics[scale=.65]{images/TaskParallel2} \\
+    \includegraphics[scale=1]{images/TaskParallel0} &
+    \includegraphics[scale=1]{images/TaskParallel1} &
+    \includegraphics[scale=1]{images/TaskParallel2} \\
     $T = t_0$ & $T = t_1$ & $T = t_2$
   \end{tabular}
   \caption{Concurrent execution with task parallelism.  Boxes indicate a
@@ -585,7 +600,7 @@ modules.
   \label{fig:TaskParallelism}
 \end{figure}
 
-Figure~\ref{fig:TaskParallelism} demonstrates task parallelism applied to
+\figref{fig:TaskParallelism} demonstrates task parallelism applied to
 an example pipeline.  At time $t_0$ the two readers begin executing
 concurrently.  Once the first reader completes, at time $t_1$, both of its
 downstream modules may begin executing concurrently.  The other reader
@@ -615,10 +630,10 @@ modules process the proceeding one.
 \begin{figure}[htbp]
   \centering
   \begin{tabular}{@{}c@{\qquad}c@{\qquad}c@{\qquad}c@{}}
-    \includegraphics[scale=.65]{images/PipelineParallel0} &
-    \includegraphics[scale=.65]{images/PipelineParallel1} &
-    \includegraphics[scale=.65]{images/PipelineParallel2} &
-    \includegraphics[scale=.65]{images/PipelineParallel3} \\
+    \includegraphics[scale=1]{images/PipelineParallel0} &
+    \includegraphics[scale=1]{images/PipelineParallel1} &
+    \includegraphics[scale=1]{images/PipelineParallel2} &
+    \includegraphics[scale=1]{images/PipelineParallel3} \\
     $T = t_0$ & $T = t_1$ & $T = t_2$ & $T= t_3$
   \end{tabular}
   \caption{Concurrent execution with pipeline parallelism.  Boxes indicate
@@ -627,7 +642,7 @@ modules process the proceeding one.
   \label{fig:PipelineParallelism}
 \end{figure}
 
-Figure~\ref{fig:PipelineParallelism} demonstrates pipeline parallelism
+\figref{fig:PipelineParallelism} demonstrates pipeline parallelism
 applied to an example pipeline.  At time $t_0$ the reader loads the first
 piece of data.  At time $t_1$, the loaded piece is passed to the filter
 where it is processed while the second piece is loaded by the reader.
@@ -650,7 +665,7 @@ as described in Section~\ref{sec:OutOfCore}.
 
 \begin{figure}[htbp]
   \centering
-  \includegraphics[scale=.65]{images/DataParallel}
+  \includegraphics[scale=1]{images/DataParallel}
   \caption{Concurrent execution with pipeline parallelism.  Boxes represent
     separate processes, each with its own partition of data.  Communication
     among processes may also occur.}
@@ -659,7 +674,7 @@ as described in Section~\ref{sec:OutOfCore}.
 
 \keyterm{Data parallelism} partitions the input data into some set number
 of pieces.  It then replicates the pipeline for each piece and executes
-them concurrently, as shown in Figure~\ref{fig:DataParallelism}.
+them concurrently, as shown in \figref{fig:DataParallelism}.
 
 Of the three modes of concurrent scheduling, data parallelism is the most
 widely used.  The amount of concurrency is limited only by the number of
@@ -1003,7 +1018,7 @@ what they are, how they have evolved, and the current features they
 implement.
 
 
-\section{Acknowledgments}
+\section*{Acknowledgments}
 
 This work was supported in part by the DOE Office of Science, Advanced
 Scientific Computing Research, under award number 10-014707, program
@@ -1014,7 +1029,21 @@ Sandia Corporation, a wholly owned subsidiary of Lockheed Martin
 Corporation, for the U.S. Department of Energy's National Nuclear Security
 Administration.
 
-\bibliographystyle{plain}
+\bibliographystyle{IEEEtran}
 \bibliography{VisPipelines}
+
+\begin{biography}[{\includegraphics[width=1in]{images/PhotoMoreland}}]{Kenneth Moreland}
+  received the BS degrees in computer science and in electrical engineering
+  from the New Mexico Institute of Mining and Technology in 1997.  He
+  received the MS and PhD degrees in computer science from the University
+  of New Mexico in 2000 and 2004, respectively, and currently resides at
+  Sandia National Laboratories.  Dr. Moreland specializes in large-scale
+  visualization and graphics and has played an active role in the
+  development of ParaView, a general-purpose scientific visualization
+  system capable of scalable parallel data processing.  His current
+  interests include the design and development of visualization algorithms
+  and systems to run on multi-core, many-core, and future-generation
+  computer hardware.
+\end{biography}
 
 \end{document}

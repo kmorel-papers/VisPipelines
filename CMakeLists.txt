@@ -19,6 +19,7 @@ set(images
   images/PipelineParallel2.pdf
   images/PipelineParallel3.pdf
   images/DataParallel.pdf
+  images/PhotoMoreland.jpg
   )
 
 add_latex_document(VisPipelines.tex
