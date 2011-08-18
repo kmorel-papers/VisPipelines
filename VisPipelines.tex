@@ -943,9 +943,64 @@ to combine algorithms such as can be done in a visualization pipeline.
 \subsection{Worklets}
 \label{sec:Worklets}
 
+The data parallel execution model of visualization pipelines, described in
+Section~\ref{sec:DataParallelism}, is scalable because it affords a large
+degree of concurrency.  The amount of parallel threads is limited only by
+the number of partitions an input mesh can be split into.  In theory, the
+input data can be split almost indefinitely, but in practice there are
+limits to how many parallel threads can be used for a particular mesh.
+Current implementations of parallel visualization pipelines operate most
+efficiently with on the order of 100,000 to 1,000,000 cells per processing
+thread\lcite{ParaViewTutorial}.  With fewer cells than that, each core
+tends to be bogged down with execution overhead, supporting structure
+building, and boundary conditions.  It is partly this reason that hybrid
+parallel pipelines, described in Section~\ref{sec:HybridParallel}, perform
+better on multi-core nodes.
+
+The problem with hybrid parallelism is that it is not a mechanism directly
+supported by the pipeline execution mechanics.  Ideally, one would prefer
+to implement very fine data parallelism, that is breaking down the input
+all the way to its constituent elements, directly in a dataflow network so
+that the execution management may schedule both distributed- and
+shared-memory threads.  This can be done if the modules of the pipeline are
+implemented as \keyterm{worklets}, a serial function that operates on a
+single element such as a vertex or cell\lcite{Moreland2011:SciDAC}.
+
+Worklets are similar in principle to the modules in a visualization
+pipeline, but their constrained operation results in some fundamental
+differences.
+\begin{packeditemize}
+\item Worklets do not perform operations across a mesh.  It is the
+  execution management's task to apply worklets across the mesh.
+\item Worklets cannot directly perform any operation to link, traverse,
+  search, or aggregate components.  These operations are performed
+  internally by the execution system.
+\item Hybrid parallelism is implemented completely by the execution
+  management and can be applied to any combination of worklets.
+\item Because the data parallelism is at such a fine level, it is possible
+  to schedule worklets on processors that execute thousands or more threads
+  concurrently.
+\item Because the parallel nature of the problem is embedded in the
+  execution management, worklet implementation is shielded from
+  idiosyncrasies of the underlying hardware like thread management and
+  memory hierarchy.
+\end{packeditemize}
+
+Implementations of worklet-based dataflow systems are still in their
+infancy, but early results suggest that they can take advantage of
+many-core processors like GPU accelerators with simple arrangements of
+code\lcite{Moreland2011:LDAV}.
+
 
 \section{Conclusion}
 \label{sec:Conclusion}
+
+The simplicity, versatility, and power of visualization pipelines make them
+the most widely used framework for visualization systems today.  These
+dataflow networks are likely to remain the dominant structure in
+visualization for years to come.  It is therefore important to understand
+what they are, how they have evolved, and the current features they
+implement.
 
 
 \section{Acknowledgments}
