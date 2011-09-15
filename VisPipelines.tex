@@ -449,13 +449,13 @@ time steps.  Such behavior arose from data sets being organized as a
 sequence of time steps and the abundance of visualization algorithms that
 are time invariant.
 
-Time control can be added the visualization pipeline by adding time
+Time control can be added to the visualization pipeline by adding time
 information to the metadata\lcite{Biddiscombe2007}.  The basic approach is
 to add a time dimension to the region metadata described in
 Section~\ref{sec:Regions}.  A source declares what time steps are
 available, and each filter has the ability to augment that time during the
-update information pass.  Likewise in the update region pass each filter
-may request new or different time steps.  The region request may contain
+update information pass.  Likewise, in the update region pass each filter
+may request additional or different time steps.  The region request may contain
 one or more time steps.
 
 These temporal regions enable filters that operate on data that changes
