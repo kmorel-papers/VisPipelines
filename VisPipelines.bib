@@ -9,10 +9,10 @@
 )
 
 @book(VTKUsersGuide,
-	author = {Kitware, Inc.},
+	author = {Kitware Inc.},
 	title = {The VTK User's Guide},
 	edition = {11th},
-	publisher = {Kitware, Inc.},
+	publisher = {Kitware Inc.},
 	year = {2010},
 	note = {{ISBN} 978-1-930934-23-8}
 )
@@ -42,6 +42,38 @@
 	synopsis = {Early paper on the AVS system.  Interesting features are descriptions of the visualization workflow that still feel relevant today and descriptions of visualization pipeline components that are still used (for example in VTK) such as mappers and renderers.}
 )
 
+@article(apE,
+	author = {D. Scott Dyer},
+	title = {A Dataflow Toolkit for Visualization},
+	journal = {IEEE Computer Graphics and Applications},
+	volume = {10},
+	number = {4},
+	month = {July},
+	year = {1990},
+	pages = {60--69}
+)
+
+@inproceedings(VISAGE,
+	author = {W.J. Schroeder and W.E. Lorensen and G.D. Montanaro and C.R. Volpe},
+	title = {VISAGE: An Object-Oriented Scientific Visualization System},
+	booktitle = {Proceedings of Visualization '92},
+	month = {October},
+	year = {1992},
+	pages = {219--226},
+	note = {{DOI} 10.1109/VISUAL.1992.235205},
+	synopsis = {VISAGE is a closed-source precursor to VTK.}
+)
+
+@inproceedings(DataVis,
+	author = {Daniel D. Hils},
+	title = {{DataVis}: A Visual Programming Language For Scientific Visualization},
+	booktitle = {ACM Annual Computer Science Conference (CSC '91)},
+	month = {March},
+	year = {1991},
+	pages = {439--448},
+	note = {{DOI} 10.1145/327164.327331}
+)
+
 @inproceedings(OpenDX,
 	author = {Greg Abram and Lloyd A. Treinish},
 	title = {An Extended Data-Flow Architecture for Data Analysis and Visualization},
@@ -58,10 +90,10 @@
 	year = {2001}
 )
 
-@article(IRISExplorer,
+@inproceedings(IRISExplorer,
 	author = {David Foulser},
 	title = {{IRIS Explorer}: A Framework for Investigation},
-	journal = {ACM SIGGRAPH Computer Graphics},
+	booktitle = {Proceedings of SIGGRAPH 1995},
 	volume = {29},
 	number = {2},
 	month = {May},
@@ -126,7 +158,7 @@
 )
 
 @misc(VolView,
-	author = {{Kitware, Inc.}},
+	author = {{Kitware Inc.}},
 	title = {{VolView} 3.2 User Manual},
 	month = {June},
 	year = {2009}
@@ -173,16 +205,27 @@
 	year = {1987}
 )
 
-@article(Haeberli1988,
+@inproceedings(Haeberli1988,
 	author = {Paul E. Haeberli},
 	title = {{ConMan}: A Visual Programming Language for Interactive Graphics},
-	journal = {ACM SIGGRAPH Computer Graphics},
+	booktitle = {Computer Graphics (Proceedings of SIGGRAPH 88)},
 	volume = {22},
 	number = {4},
 	month = {August},
 	year = {1988},
 	pages = {103--111},
 	synopsis = {Very early paper on building visualization/graphics (I consider it mostly graphics) using pipelines.  This paper is probably on the cusp between the more general visual programming and a specific visualization pipeline.}
+)
+
+@inproceedings(Kass1992,
+	author = {Michael Kass},
+	title = {{CONDOR}: Constraint-Based Dataflow},
+	booktitle = {Computer Graphics (Proceedings of SIGGRAPH 92)},
+	volume = {26},
+	number = {2},
+	month = {July},
+	year = {1992},
+	pages = {321--330}
 )
 
 @inproceedings(Lucas1992,
@@ -194,10 +237,101 @@
 	synopsis = {Although the discussion is framed around the (no longer used) Data Explorer software, the discussion is mostly kept at a general level around pipeline-based visualizations.  An interesting side note is its discussion on parallelism, which is very close to they parallelism employed today.}
 )
 
+@inproceedings(Cook1984,
+	author = {Robert L. Cook},
+	title = {Shade Trees},
+	booktitle = {Computer Graphics (Proceedings of SIGGRAPH 84)},
+	volume = {18},
+	number = {3},
+	month = {July},
+	year = {1984},
+	pages = {223--231},
+	synopsis = {A dataflow network related to visualization pipelines but designed to build rendering shaders instead of data processing.}
+)
+
+@inproceedings(Abram1990,
+	author = {Gregory D. Abram and Turner Whitted},
+	title = {Building Block Shaders},
+	booktitle = {Computer Graphics (Proceedings of SIGGRAPH 90)},
+	volume = {24},
+	number = {4},
+	month = {August},
+	year = {1990},
+	pages = {283--288},
+	synopsis = {A graphics representations of the Shade Trees in [Cook1984].}
+)
+
+@inproceedings(Perlin1985,
+	author = {Ken Perlin},
+	title = {An Image Synthesizer},
+	booktitle = {Computer Graphics (Proceedings of SIGGRAPH 85)},
+	volumne = {19},
+	number = {3},
+	month = {July},
+	year = {1985},
+	pages = {287--296},
+	synopsis = {Some of Ken Perlin's shader work.  Sort of a dataflow on shaders, but it's a bit of a stretch.  It kind of describes itself like that, but doesn't actually build networks.  It feels much like the later SCOUT work.}
+)
+
+@article(Rasure1991,
+	author = {John R. Rasure and Carla S. Williams},
+	title = {An Integrated Data Flow Visual Language and Software Development Environment},
+	journal = {Journal of Visual Languages and Computing},
+	volume = {2},
+	number = {3},
+	month = {September},
+	year = {1991},
+	pages = {217--246},
+	synopsis = {A general visual programming language called Cantata (part of the Khoros infrastructure) that uses a dataflow network to describe programs.}
+)
+
+@inproceedings(Williams1990,
+	author = {Carla S. Williams and John R. Rasure},
+	title = {A Visual Language for Image Processing},
+	booktitle = {Proceedings of the 1990 IEEE Workshop on Visual Languages},
+	month = {October},
+	year = {1990},
+	pages = {86--91},
+	notes = {{DOI} 10.1109/WVL.1990.128387},
+	synopsis = {Same Cantana/Khoros system as [Rasure1991], but characterized as specific to image processing.}
+)
+
+@article(Wilson1989,
+	author = {Andrew C. Wilson},
+	title = {A Picture's Worth a Thousand Lines of Code},
+	journal = {Electronic System Design},
+	month = {July},
+	year = {1989},
+	pages = {57--60},
+	synopsis = {Reportedly describes a dataflow system for image processing (predating [Williams1990]).}
+)
+
+@book(ITK,
+	author = {Luis {Ib\'{a}\~{n}ez} and William Schroeder},
+	title = {The {ITK} Software Guide},
+	edition = {{ITK} 2.4},
+	publisher = {Kitware Inc.},
+	year = {2003},
+	note = {{ISBN} 1-930934-15-7}
+)
+
+@article(Koelma1994,
+	author = {Dennis Koelma and Arnold Smeulders},
+	title = {A visual programming interface for an image processing environment},
+	journal = {Pattern Recognition Letters},
+	volume = {15},
+	number = {11},
+	month = {November},
+	year = {1994},
+	pages = {1099--1109},
+	notes = {{DOI} 10.1016/0167-8655(94)90125-2},
+	synopsis = {Another dataflow system for image processing.}
+)
+
 @article(Lorensen1987,
 	author = {William E. Lorensen and Harvey E. Cline},
 	title = {Marching Cubes: A High Resolution {3D} Surface Construction Algorithm},
-	journal = {Computer Graphics},
+	journal = {Computer Graphics (Proceedings of SIGGRAPH 87)},
 	pages = {163--169},
 	volume = {21},
 	number = {4},
