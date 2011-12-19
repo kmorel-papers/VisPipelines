@@ -6,8 +6,8 @@ include(UseLATEX.cmake)
 
 set(images
   images/SimplePipeline.pdf
-  images/BranchingPipeline.pdf
-  images/BranchingPipelineResult.png
+  images/BranchingPipeline2.pdf
+  images/BranchingPipeline2Result.png
   images/UpdateInformation.pdf
   images/UpdateRegion.pdf
   images/UpdateData.pdf

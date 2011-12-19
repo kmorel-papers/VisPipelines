@@ -179,17 +179,15 @@ Pipelines can also branch.  A \keyterm{fan out} occurs when the output of
 one module is connected to the inputs of multiple other modules.  A
 \keyterm{fan in} occurs when a module accepts multiple inputs that can
 come from separate module outputs.  \figref{fig:BranchingPipeline}
-demonstrates a pipeline with branching (adapted from the ParaView
-tutorial\lcite{ParaViewTutorial}).
+demonstrates a pipeline with branching.
 
 \begin{figure}[htbp]
   \centering
-  \begin{tabular}{cc}
-    \includegraphics[height=2.25in]{images/BranchingPipeline} &
-    \includegraphics[height=2.25in]{images/BranchingPipelineResult}
-  \end{tabular}
-  \caption{A visualization pipeline with branching.  The final
-    visualization is shown to the right.}
+  \includegraphics[width=5.5in]{images/BranchingPipeline2} \\
+  \includegraphics[width=5.5in]{images/BranchingPipeline2Result}
+  \caption{A visualization pipeline with branching.  Intermediate results
+    are shown next to each filter and the final visualization is shown at
+    the bottom.}
   \label{fig:BranchingPipeline}
 \end{figure}
 
