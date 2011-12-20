@@ -951,8 +951,8 @@ pipeline.  However, the constrains imposed by MapReduce make it more
 difficult to design visualization algorithms, and there is no inherent way
 to combine algorithms such as can be done in a visualization pipeline.
 
-\subsection{Worklets}
-\label{sec:Worklets}
+\subsection{Fine-Grained Data Parallelism}
+\label{sec:FineGrainedParallelism}
 
 The data parallel execution model of visualization pipelines, described in
 Section~\ref{sec:DataParallelism}, is scalable because it affords a large
@@ -969,38 +969,27 @@ parallel pipelines, described in Section~\ref{sec:HybridParallel}, perform
 better on multi-core nodes.
 
 The problem with hybrid parallelism is that it is not a mechanism directly
-supported by the pipeline execution mechanics.  Ideally, one would prefer
-to implement very fine data parallelism, that is breaking down the input
-all the way to its constituent elements, directly in a dataflow network so
-that the execution management may schedule both distributed- and
-shared-memory threads.  This can be done if the modules of the pipeline are
-implemented as \keyterm{worklets}, a serial function that operates on a
-single element such as a vertex or cell\lcite{Moreland2011:SciDAC}.
+supported by the pipeline execution mechanics.  Several projects seek to
+fill this gap by providing fine-grained algorithms designed to run on
+either GPU or multi-core CPU.
 
-Worklets are similar in principle to the modules in a visualization
-pipeline, but their constrained operation results in some fundamental
-differences.
-\begin{packeditemize}
-\item Worklets do not perform operations across a mesh.  It is the
-  execution management's task to apply worklets across the mesh.
-\item Worklets cannot directly perform any operation to link, traverse,
-  search, or aggregate components.  These operations are performed
-  internally by the execution system.
-\item Hybrid parallelism is implemented completely by the execution
-  management and can be applied to any combination of worklets.
-\item Because the data parallelism is at such a fine level, it is possible
-  to schedule worklets on processors that execute thousands or more threads
-  concurrently.
-\item Because the parallel nature of the problem is embedded in the
-  execution management, worklet implementation is shielded from
-  idiosyncrasies of the underlying hardware like thread management and
-  memory hierarchy.
-\end{packeditemize}
+One project, PISTON\lcite{PISTON} provides implementations fine-grained
+data-parallel visualization algorithms.  PISTON provides portability among
+multi- and many-core architectures by using basic parallel operations such
+as reductions, prefix sums, sorting, and gathering implemented on top of
+Thrust\lcite{Thrust}, a parallel template library, in such a way that they
+can be ported across multiple programming models.
 
-Implementations of worklet-based dataflow systems are still in their
-infancy, but early results suggest that they can take advantage of
-many-core processors like GPU accelerators with simple arrangements of
-code\lcite{Moreland2011:LDAV}.
+Another project, Dax\lcite{Moreland2011:LDAV}, provides higher level
+abstractions for building fine-grained data-parallel visualization
+algorithms.  Dax identifies common visualization operations, such as
+mapping a function to the local neighborhood of a mesh element or building
+geometry, and provides basic parallel operations with fine-grained
+concurrency.  Algorithms are built in Dax by providing \keyterm{worklets},
+serial functions that operate on a small region of data, and applying these
+worklets to the basic operations.  The intention is to simplify
+visualization algorithm development while encouraging good data-parallel
+programming practicies.
 
 \subsection{Domain Specific Languages}
 
