@@ -963,17 +963,17 @@ limits to how many parallel threads can be used for a particular mesh.
 Current implementations of parallel visualization pipelines operate most
 efficiently with on the order of 100,000 to 1,000,000 cells per processing
 thread\lcite{ParaViewTutorial}.  With fewer cells than that, each core
-tends to be bogged down with execution overhead, supporting structure
-building, and boundary conditions.  It is partly this reason that hybrid
-parallel pipelines, described in Section~\ref{sec:HybridParallel}, perform
-better on multi-core nodes.
+tends to be bogged down with execution overhead, supporting structure, and
+boundary conditions.  It is partly this reason that hybrid parallel
+pipelines, described in Section~\ref{sec:HybridParallel}, perform better on
+multi-core nodes.
 
 The problem with hybrid parallelism is that it is not a mechanism directly
 supported by the pipeline execution mechanics.  Several projects seek to
 fill this gap by providing fine-grained algorithms designed to run on
 either GPU or multi-core CPU.
 
-One project, PISTON\lcite{PISTON} provides implementations fine-grained
+One project, PISTON\lcite{PISTON}, provides implementations of fine-grained
 data-parallel visualization algorithms.  PISTON provides portability among
 multi- and many-core architectures by using basic parallel operations such
 as reductions, prefix sums, sorting, and gathering implemented on top of
