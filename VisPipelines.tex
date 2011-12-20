@@ -38,7 +38,8 @@
 
 \newcommand{\etal}{et al.}
 
-\newcommand{\fix}[1]{{\color{red}\textbf{\textsc{[#1]}}}}
+%\newcommand{\fix}[1]{{\color{red}\textbf{\textsc{[#1]}}}}
+\newcommand{\fix}[1]{}
 
 \newenvironment{packeditemize}{
   \begin{itemize}
@@ -157,7 +158,7 @@ data generators are typical source modules.  A sink module accepts data
 through an \keyterm{input} and performs an operation with no further result
 (as far as the pipeline is concerned).  Typical sinks are file writers and
 rendering modules that provide images to a user interface.  A filter
-module has at least one input from which it transform data and provides
+module has at least one input from which it transforms data and provides
 results through at least one output.
 
 The intention is to encapsulate algorithms in interchangeable source,
@@ -241,7 +242,7 @@ unrolls back to the originating sink.  Because the method of the
 demand-driven pipeline is to pull data from the upstream modules, this
 method is also known as the \keyterm{pull model}.  The demand-driven method
 of execution is useful when using a visualization pipeline to provide data
-to an end system.  For example, the visualization could respond to render
+to an end user system.  For example, the visualization could respond to render
 requests to update a GUI.
 
 \subsection{Caching Intermediate Values}
@@ -422,7 +423,7 @@ requires the three pipeline passes demonstrated in
   \label{fig:RegionPasses}
 \end{figure}
 
-In the first \keyterm{update information} pass, sources produce the entire
+In the first \keyterm{update information} pass, sources describe the entire
 region they can generate, and that region gets passed down the pipeline.
 As the region passes through filters, they have the opportunity to change
 the region.  This could be because the filter is combining multiple regions
@@ -735,7 +736,7 @@ Data-parallel pipelines are most often used with a class of parallel
 rendering algorithms called \keyterm{sort last}\lcite{Molnar1994}.
 Sort-last parallel rendering algorithms are characterized by each process
 first independently and concurrently rendering its local data into its own
-local image and then collectively combining these locally generated images
+local image and then collectively reducing them
 into a single cohesive image.
 
 Although it is possible to use other types of parallel rendering algorithms
