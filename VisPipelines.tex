@@ -880,7 +880,7 @@ because of the visualization pipeline's flexibility and the abundance of
 existing implementations.
 
 
-\section{Visualization Pipeline Alternatives}
+\section{Emerging Visualization Pipeline Alternatives}
 \label{sec:Alternatives}
 
 Although visualization pipelines are the most widely used visualization
@@ -1001,6 +1001,23 @@ Implementations of worklet-based dataflow systems are still in their
 infancy, but early results suggest that they can take advantage of
 many-core processors like GPU accelerators with simple arrangements of
 code\lcite{Moreland2011:LDAV}.
+
+\subsection{Domain Specific Languages}
+
+Domain specific languages provide a new or augomented programming language
+with extended operations helpful for a specific domain of problems.  Most
+visualization systems are built as a library on top of a language rather
+than modify the language itself although there are some examples of domain
+specific languages that can insert visualization operations during a
+computer graphics rendering\lcite{Corrie1993,Crawfis1991}.
+
+Recently, domain specific languages emerged to build visualization on new
+highly threaded architectures.  For example, Scout\lcite{Scout}
+functionally defines fields and operations that can be executed on a GPU
+during visualization.  Liszt\lcite{Liszt} provides provides special
+language constructs for operations on unstructured grids.  These operations
+are principally built to support partial differential equation solving but
+can also be used for analysis.
 
 
 \section{Conclusion}
