@@ -1,6 +1,6 @@
 % -*- latex -*-
 
-\documentclass[journal,onecolumn,12pt,letterpaper,twoside]{IEEEtran}
+\documentclass[journal,twocolumn,10pt,letterpaper,twoside]{IEEEtran}
 
 \usepackage{amsfonts}
 \usepackage{amssymb}
@@ -66,7 +66,7 @@
 % Avoid putting figures on their own page.
 \renewcommand{\textfraction}{0.05}
 \renewcommand{\topfraction}{0.95}
-\renewcommand{\bottomfraction}{0.5}
+\renewcommand{\bottomfraction}{0.95}
 
 % Make sure this is big enough so that only big figures end up on their own
 % page but small enough so that if a figure does have to be on its own
@@ -177,6 +177,16 @@ generator\lcite{Lorensen1987} (filter), and an image renderer (sink).
   \label{fig:SimplePipeline}
 \end{figure}
 
+\begin{figure*}[htbp]
+  \centering
+  \includegraphics[width=5.5in]{images/BranchingPipeline2} \\
+  \includegraphics[width=5in]{images/BranchingPipeline2Result}
+  \caption{A visualization pipeline with branching.  Intermediate results
+    are shown next to each filter and the final visualization is shown at
+    the bottom.}
+  \label{fig:BranchingPipeline}
+\end{figure*}
+
 Pipeline modules are highly interchangeable.  Any two modules can be
 connected so long as the data in the output is compatible with the expected
 data of the downstream input.  Pipelines can be arbitrarily deep.
@@ -185,16 +195,6 @@ one module is connected to the inputs of multiple other modules.  A
 \keyterm{fan in} occurs when a module accepts multiple inputs that can
 come from separate module outputs.  \figref{fig:BranchingPipeline}
 demonstrates a pipeline with branching.
-
-\begin{figure}[htbp]
-  \centering
-  \includegraphics[width=5.5in]{images/BranchingPipeline2} \\
-  \includegraphics[width=5.5in]{images/BranchingPipeline2Result}
-  \caption{A visualization pipeline with branching.  Intermediate results
-    are shown next to each filter and the final visualization is shown at
-    the bottom.}
-  \label{fig:BranchingPipeline}
-\end{figure}
 
 For more information on using visualization pipelines and the modules
 they typically contain, consult the documentation for one of the numerous
@@ -376,6 +376,26 @@ can in turn change the execution management of the pipeline.
 \subsection{Regions}
 \label{sec:Regions}
 
+\begin{figure*}[htbp]
+  \centering
+  \begin{tabular}{@{}c@{\qquad}c@{\qquad}c@{}}
+  \subfloat[Update Information]{
+    \includegraphics[scale=.9]{images/UpdateInformation}
+    \label{fig:RegionPasses:UpdateInformation}
+  } &
+  \subfloat[Update Region]{
+    \includegraphics[scale=.9]{images/UpdateRegion}
+    \label{fig:RegionPasses:UpdateRegion}
+  } &
+  \subfloat[Update Data]{
+    \includegraphics[scale=.9]{images/UpdateData}
+    \label{fig:RegionPasses:UpdateData}
+  }
+  \end{tabular}
+  \caption{The three pipeline passes for using regional data.}
+  \label{fig:RegionPasses}
+\end{figure*}
+
 Perhaps the most important piece of information a visualization pipeline
 can use is the region the data is defined over and the regions the data can
 be split up into.  Knowing and specifying regions supports execution
@@ -402,26 +422,6 @@ Region metadata can flow throughout the pipeline independently of data.  A
 general implementation to propagate region information and select regions
 requires the three pipeline passes demonstrated in
 \figref{fig:RegionPasses}\lcite{Ahrens2001}.
-
-\begin{figure}[htbp]
-  \centering
-  \begin{tabular}{@{}c@{\qquad}c@{\qquad}c@{}}
-  \subfloat[Update Information]{
-    \includegraphics{images/UpdateInformation}
-    \label{fig:RegionPasses:UpdateInformation}
-  } &
-  \subfloat[Update Region]{
-    \includegraphics{images/UpdateRegion}
-    \label{fig:RegionPasses:UpdateRegion}
-  } &
-  \subfloat[Update Data]{
-    \includegraphics{images/UpdateData}
-    \label{fig:RegionPasses:UpdateData}
-  }
-  \end{tabular}
-  \caption{The three pipeline passes for using regional data.}
-  \label{fig:RegionPasses}
-\end{figure}
 
 In the first \keyterm{update information} pass, sources describe the entire
 region they can generate, and that region gets passed down the pipeline.
@@ -494,6 +494,19 @@ would be passed up as depicted in
 \figref{fig:RegionPasses:UpdateRegion}.  As the contract moves up the
 pipeline, filters add their impacts to it, forming a union of the
 requirements, abilities, and limitations of the pipeline.
+
+\begin{figure*}[htbp]
+  \centering
+  \begin{tabular}{@{}c@{\qquad}c@{\qquad}c@{}}
+    \includegraphics[scale=.9]{images/TaskParallel0} &
+    \includegraphics[scale=.9]{images/TaskParallel1} &
+    \includegraphics[scale=.9]{images/TaskParallel2} \\
+    $T = t_0$ & $T = t_1$ & $T = t_2$
+  \end{tabular}
+  \caption{Concurrent execution with task parallelism.  Boxes indicate a
+    region of the pipeline executed at a given time.}
+  \label{fig:TaskParallelism}
+\end{figure*}
 
 \subsection{Prioritized Streaming}
 \label{sec:PrioritizedStreaming}
@@ -590,18 +603,29 @@ and executes them concurrently.  Independent parts of the pipeline occur
 where sources produce data independently or where fan out feeds multiple
 modules.
 
-\begin{figure}[htbp]
+\begin{figure*}[htbp]
   \centering
-  \begin{tabular}{@{}c@{\qquad}c@{\qquad}c@{}}
-    \includegraphics[scale=1]{images/TaskParallel0} &
-    \includegraphics[scale=1]{images/TaskParallel1} &
-    \includegraphics[scale=1]{images/TaskParallel2} \\
-    $T = t_0$ & $T = t_1$ & $T = t_2$
+  \begin{tabular}{@{}c@{\qquad}c@{\qquad}c@{\qquad}c@{}}
+    \includegraphics[scale=.9]{images/PipelineParallel0} &
+    \includegraphics[scale=.9]{images/PipelineParallel1} &
+    \includegraphics[scale=.9]{images/PipelineParallel2} &
+    \includegraphics[scale=.9]{images/PipelineParallel3} \\
+    $T = t_0$ & $T = t_1$ & $T = t_2$ & $T= t_3$
   \end{tabular}
-  \caption{Concurrent execution with task parallelism.  Boxes indicate a
-    region of the pipeline executed at a given time.}
-  \label{fig:TaskParallelism}
-\end{figure}
+  \caption{Concurrent execution with pipeline parallelism.  Boxes indicate
+    a region of the pipeline executed at a given time with the piece number
+    annotated.}
+  \label{fig:PipelineParallelism}
+\end{figure*}
+
+\begin{figure*}[htbp]
+  \centering
+  \includegraphics[scale=.9]{images/DataParallel}
+  \caption{Concurrent execution with pipeline parallelism.  Boxes represent
+    separate processes, each with its own partition of data.  Communication
+    among processes may also occur.}
+  \label{fig:DataParallelism}
+\end{figure*}
 
 \figref{fig:TaskParallelism} demonstrates task parallelism applied to
 an example pipeline.  At time $t_0$ the two readers begin executing
@@ -630,21 +654,6 @@ any one time, but in the pipeline-parallelism approach multiple pieces are
 loaded so that a module can process the next piece while downstream
 modules process the proceeding one.
 
-\begin{figure}[htbp]
-  \centering
-  \begin{tabular}{@{}c@{\qquad}c@{\qquad}c@{\qquad}c@{}}
-    \includegraphics[scale=1]{images/PipelineParallel0} &
-    \includegraphics[scale=1]{images/PipelineParallel1} &
-    \includegraphics[scale=1]{images/PipelineParallel2} &
-    \includegraphics[scale=1]{images/PipelineParallel3} \\
-    $T = t_0$ & $T = t_1$ & $T = t_2$ & $T= t_3$
-  \end{tabular}
-  \caption{Concurrent execution with pipeline parallelism.  Boxes indicate
-    a region of the pipeline executed at a given time with the piece number
-    annotated.}
-  \label{fig:PipelineParallelism}
-\end{figure}
-
 \figref{fig:PipelineParallelism} demonstrates pipeline parallelism
 applied to an example pipeline.  At time $t_0$ the reader loads the first
 piece of data.  At time $t_1$, the loaded piece is passed to the filter
@@ -665,15 +674,6 @@ as described in Section~\ref{sec:OutOfCore}.
 
 \subsubsection{Data Parallelism}
 \label{sec:DataParallelism}
-
-\begin{figure}[htbp]
-  \centering
-  \includegraphics[scale=1]{images/DataParallel}
-  \caption{Concurrent execution with pipeline parallelism.  Boxes represent
-    separate processes, each with its own partition of data.  Communication
-    among processes may also occur.}
-  \label{fig:DataParallelism}
-\end{figure}
 
 \keyterm{Data parallelism} partitions the input data into some set number
 of pieces.  It then replicates the pipeline for each piece and executes
