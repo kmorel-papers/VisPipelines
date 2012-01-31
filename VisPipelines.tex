@@ -337,8 +337,9 @@ required to process each piece of output\lcite{Law1999}.
 Because the input data set is broken into pieces, the boundary between
 pieces is important for many algorithms.  Boundaries are often handled by
 adding an extra layer of cells, called \keyterm{ghost
-  cells}\lcite{Ahrens2001}.  These ghost cells complete the neighborhood
-information for each piece and can be removed from the final result.
+  cells}\lcite{Ahrens2001} (or also often called \keyterm{halo cells}).
+These ghost cells complete the neighborhood information for each piece and
+can be removed from the final result.
 
 Some algorithms can be run out-of-core with a simple execution model that
 iterates over pieces.  However, most pipelines can implement streaming more
