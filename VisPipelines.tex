@@ -1000,6 +1000,13 @@ worklets to the basic operations.  The intention is to simplify
 visualization algorithm development while encouraging good data-parallel
 programming practices.
 
+A third project, EAVL\lcite{EAVL}, provides an abstract data model that can
+be adapted to a variety of topological layouts.  Operations on mesh
+elements and sub-elements are predicated by applying in parallel
+\keyterm{functors}, structures acting like functions, on the elements of
+the mesh.  These functors are easy-to-design serial components but can be
+scheduled on many concurrent threads.
+
 \subsection{Domain Specific Languages}
 
 Domain specific languages provide a new or augmented programming language
@@ -1021,7 +1028,46 @@ can also be used for analysis.
 \section{Conclusion}
 \label{sec:Conclusion}
 
-The simplicity, versatility, and power of visualization pipelines make them
+The visualization community faces many challenges adapting pipeline
+structures to future visualization needs, particularly those associated
+with the push to exascale computing.  One primary challenge of exascale
+computing is the shift to massively threaded, heterogeneous,
+accelerator-based architectures\lcite{ScientificDiscoveryExascale2011}.
+Although a visualization pipeline can support algorithms that drive such
+architectures (see the hybrid parallelism in
+Section~\ref{sec:HybridParallel}), the execution models described in
+Section~\ref{sec:ParallelExecution:Modes} are currently not generally
+scalable to the fine level of concurrency required.  Most likely,
+independent design metaphors\lcite{PISTON,Moreland2011:LDAV,EAVL} will
+assist in algorithm design.  Some of these current projects already have
+plans to encapsulate their algorithms in existing visualization pipeline
+implementations.
+
+Another potential problem facing visualization pipelines and visualization
+applications in general is the memory usage.  Predictions indicate that the
+cost of computation (in terms of operations per second) will decrease with
+respect to the cost of memory.  Hence, we expect the amount of memory
+available for a particular problem size to decrease in future computer
+systems.  Visualization algorithms are typically geared to provide a short
+computation on a large amount of data, which makes them favor ``memory
+fat'' computer nodes.  Visualization pipelines often impose an extra memory
+overhead.  Expect future work on making visualization pipelines leaner.
+
+Finally, as simulations take advantage of increasing compute resources,
+they sometimes require new topological features to capture their
+complexity.  Although the design of data structures is independent of the
+design of dataflow networks, dataflow networks like a visualization
+pipeline are difficult to dynamically adjust to data structures as the
+connections and operations are in part defined by the data structure.
+Consequently, visualization pipeline systems have been slow to adapt new
+data structures.  Schroeder \etal\scite{Schroeder2006} provide a generic,
+iterator-based interface to topology and field data that can be used within
+a visualization pipeline, but because its abstract interface hides the data
+layout and capabilities, result data cannot be written back into these
+structures.  Thus, the first non-trivial module typically must tessellate
+the geometry into a form the native data structures can represent.
+
+Regardless, the simplicity, versatility, and power of visualization pipelines make them
 the most widely used framework for visualization systems today.  These
 dataflow networks are likely to remain the dominant structure in
 visualization for years to come.  It is therefore important to understand
