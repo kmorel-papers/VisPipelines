@@ -141,7 +141,7 @@ the related fields of computer graphics\lcite{Haeberli1988,Kass1992},
 rendering shaders\lcite{Abram1990,Cook1984,Perlin1985}, and image
 processing\lcite{Koelma1994,Williams1990,Wilson1989,ITK}.  Visualization
 applications like ParaView\lcite{ParaView}, VisTrails\lcite{VisTrails}, and
-MayaVi\lcite{MayaVi} allow end users to build visualization pipelines with
+Mayavi\lcite{Mayavi} allow end users to build visualization pipelines with
 graphical user interface representations.  The visualization pipeline is
 also used internally in a number of other applications including
 VisIt\lcite{VisIt}, VolView\lcite{VolView}, OsiriX\lcite{OsiriX}, 3D
@@ -202,6 +202,19 @@ one module is connected to the inputs of multiple other modules.  A
 \keyterm{fan in} occurs when a module accepts multiple inputs that can
 come from separate module outputs.  \figref{fig:BranchingPipeline}
 demonstrates a pipeline with branching.
+
+These diagrams are typical representations of pipeline structure: blocks
+representing modules connected by arrows representing the direction in
+which data flows.  In \figref{fig:SimplePipeline} and
+\figref{fig:BranchingPipeline}, data clearly originates in the read module
+and terminates in the render module.  However, keep in mind that this is a
+logical flow of data.  As documented later, data and control can flow in a
+variety of ways through the network.  However, such deviation can be
+considered implementation details.  From a user's standpoint, this
+conceptual flow of data from sources to sinks is sufficient.  This paper
+will always display this same conceptual model of the dataflow network.
+Where appropriate, new elements will be attached to describe further
+pipeline features and implementations.
 
 For more information on using visualization pipelines and the modules
 they typically contain, consult the documentation for one of the numerous
@@ -304,7 +317,7 @@ the pipeline, but tends to be simpler to implement and manage.
 
 Many visualization pipeline implementations have a fixed execution
 management system.  However, such a system can provide more flexibility by
-separating its execution management into a \keyterm{executive} object.  The
+separating its execution management into an \keyterm{executive} object.  The
 executive object is an independent object that manages pipeline execution.
 Through polymorphism, different types of execution models can be
 supported.  For example, VTK is designed as a demand-driven pipeline, but
