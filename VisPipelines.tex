@@ -653,8 +653,10 @@ an example pipeline.  At time $t_0$ the two readers begin executing
 concurrently.  Once the first reader completes, at time $t_1$, both of its
 downstream modules may begin executing concurrently.  The other reader
 and its downstream modules may continue executing at this time, or they
-may sit idle if they have completed.  After all of its inputs complete, at
-time $t_2$, the renderer executes.
+may sit idle if they have completed. (\figref{fig:TaskParallelism} implies
+that the Reader 2, Filter 4, Filter 5 subpipeline continues executing after
+$t_1$, which may or may not be the actual case.) After all of its inputs
+complete, at time $t_2$, the renderer executes.
 
 Because task parallelism breaks a pipeline into independent sub-pipelines
 to execute concurrently, task parallelism can be applied to any type of
