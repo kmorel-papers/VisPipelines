@@ -367,6 +367,26 @@ object attached to each module in the pipeline.  The module objects
 get relegated to only a function to execute whereas the executive manages
 pipeline connections, data movement, and execution\lcite{VTKUsersGuide}.
 
+\begin{figure*}[htbp]
+  \centering
+  \begin{tabular}{@{}c@{\qquad}c@{\qquad}c@{}}
+  \subfloat[Update Information]{
+    \includegraphics[scale=.9]{images/UpdateInformation}
+    \label{fig:RegionPasses:UpdateInformation}
+  } &
+  \subfloat[Update Region]{
+    \includegraphics[scale=.9]{images/UpdateRegion}
+    \label{fig:RegionPasses:UpdateRegion}
+  } &
+  \subfloat[Update Data]{
+    \includegraphics[scale=.9]{images/UpdateData}
+    \label{fig:RegionPasses:UpdateData}
+  }
+  \end{tabular}
+  \caption{The three pipeline passes for using regional data.}
+  \label{fig:RegionPasses}
+\end{figure*}
+
 \subsection{Out-of-Core Streaming}
 \label{sec:OutOfCore}
 
@@ -432,26 +452,6 @@ can in turn change the execution management of the pipeline.
 
 \subsection{Regions}
 \label{sec:Regions}
-
-\begin{figure*}[htbp]
-  \centering
-  \begin{tabular}{@{}c@{\qquad}c@{\qquad}c@{}}
-  \subfloat[Update Information]{
-    \includegraphics[scale=.9]{images/UpdateInformation}
-    \label{fig:RegionPasses:UpdateInformation}
-  } &
-  \subfloat[Update Region]{
-    \includegraphics[scale=.9]{images/UpdateRegion}
-    \label{fig:RegionPasses:UpdateRegion}
-  } &
-  \subfloat[Update Data]{
-    \includegraphics[scale=.9]{images/UpdateData}
-    \label{fig:RegionPasses:UpdateData}
-  }
-  \end{tabular}
-  \caption{The three pipeline passes for using regional data.}
-  \label{fig:RegionPasses}
-\end{figure*}
 
 Perhaps the most important piece of information a visualization pipeline
 can use is the region the data is defined over and the regions the data can
@@ -552,19 +552,6 @@ would be passed up as depicted in
 pipeline, filters add their impacts to it, forming a union of the
 requirements, abilities, and limitations of the pipeline.
 
-\begin{figure*}[htbp]
-  \centering
-  \begin{tabular}{@{}c@{\qquad}c@{\qquad}c@{}}
-    \includegraphics[scale=.9]{images/TaskParallel0} &
-    \includegraphics[scale=.9]{images/TaskParallel1} &
-    \includegraphics[scale=.9]{images/TaskParallel2} \\
-    $T = t_0$ & $T = t_1$ & $T = t_2$
-  \end{tabular}
-  \caption{Concurrent execution with task parallelism.  Boxes indicate a
-    region of the pipeline executed at a given time.}
-  \label{fig:TaskParallelism}
-\end{figure*}
-
 \subsection{Prioritized Streaming}
 \label{sec:PrioritizedStreaming}
 
@@ -637,6 +624,34 @@ the source.  This is done by expanding either region metadata
 pass and adjust the field ranges in the query\lcite{Rubel2008}.
 
 
+\begin{figure*}[htbp]
+  \centering
+  \begin{tabular}{@{}c@{\qquad}c@{\qquad}c@{}}
+    \includegraphics[scale=.9]{images/TaskParallel0} &
+    \includegraphics[scale=.9]{images/TaskParallel1} &
+    \includegraphics[scale=.9]{images/TaskParallel2} \\
+    $T = t_0$ & $T = t_1$ & $T = t_2$
+  \end{tabular}
+  \caption{Concurrent execution with task parallelism.  Boxes indicate a
+    region of the pipeline executed at a given time.}
+  \label{fig:TaskParallelism}
+\end{figure*}
+
+\begin{figure*}[htbp]
+  \centering
+  \begin{tabular}{@{}c@{\qquad}c@{\qquad}c@{\qquad}c@{}}
+    \includegraphics[scale=.9]{images/PipelineParallel0} &
+    \includegraphics[scale=.9]{images/PipelineParallel1} &
+    \includegraphics[scale=.9]{images/PipelineParallel2} &
+    \includegraphics[scale=.9]{images/PipelineParallel3} \\
+    $T = t_0$ & $T = t_1$ & $T = t_2$ & $T= t_3$
+  \end{tabular}
+  \caption{Concurrent execution with pipeline parallelism.  Boxes indicate
+    a region of the pipeline executed at a given time with the piece number
+    annotated.}
+  \label{fig:PipelineParallelism}
+\end{figure*}
+
 \section{Parallel Execution}
 \label{sec:ParallelExecution}
 
@@ -659,21 +674,6 @@ pipeline scheduling: task, pipeline, and data\lcite{Ahrens2000}.
 and executes them concurrently.  Independent parts of the pipeline occur
 where sources produce data independently or where fan out feeds multiple
 modules.
-
-\begin{figure*}[htbp]
-  \centering
-  \begin{tabular}{@{}c@{\qquad}c@{\qquad}c@{\qquad}c@{}}
-    \includegraphics[scale=.9]{images/PipelineParallel0} &
-    \includegraphics[scale=.9]{images/PipelineParallel1} &
-    \includegraphics[scale=.9]{images/PipelineParallel2} &
-    \includegraphics[scale=.9]{images/PipelineParallel3} \\
-    $T = t_0$ & $T = t_1$ & $T = t_2$ & $T= t_3$
-  \end{tabular}
-  \caption{Concurrent execution with pipeline parallelism.  Boxes indicate
-    a region of the pipeline executed at a given time with the piece number
-    annotated.}
-  \label{fig:PipelineParallelism}
-\end{figure*}
 
 \begin{figure*}[htbp]
   \centering
