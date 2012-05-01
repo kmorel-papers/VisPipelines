@@ -216,6 +216,42 @@ will always display this same conceptual model of the dataflow network.
 Where appropriate, new elements will be attached to describe further
 pipeline features and implementations.
 
+To better scope the contents of this survey, we consider the following
+formal definition.  A visualization pipeline is a dataflow network
+comprising the following three primary components.
+
+\begin{description}[\IEEEsetlabelwidth{Connections}]
+\item[Modules] are functional units.  Each module has zero or more input
+  ports that ingest data and an independent number of zero or more output
+  ports that produce data.  The function of the module is fixed whereas
+  data entering an input port typically change.  Data emitted from the
+  output ports are the result of the module's function operating on the
+  input data.
+\item[Connections] are directional attachments from the output port of one
+  module to the input port of another module.  Any data emitted from the
+  output port of the connection enter the input port of the connection.
+  Together modules and connections form the nodes and arcs, respectively,
+  of a directional graph.  The dataflow network can be configured by
+  defining connections and connections are arbitrary subject to
+  constraints.
+\item[Execution] management is inherent in the pipeline.  Typically there
+  is a mechanism to invoke execution, but once invoked data automatically
+  flows through the network.
+\end{description}
+
+For a system or body of research to be considered in this survey, it must
+be the \emph{embodiment} of a visualization pipeline.  It must allow the
+construction of objects that represent modules, and it must provide a means
+to connect these modules.  This definition excludes interfaces that are
+imperative or functional as well as interfaces based on data structures
+defining graphical representation such as scene graphs or marks on
+hierarchies.
+
+This paper is less formal about what it means to be a \emph{visualization}
+pipeline (as opposed to, say, an image pipeline). Suffice it to say that
+the surveyed literature here are self-declared to have a major component
+for scientific visualization.
+
 For more information on using visualization pipelines and the modules
 they typically contain, consult the documentation for one of the numerous
 libraries or applications using a visualization
