@@ -1,6 +1,6 @@
 % -*- latex -*-
 
-\documentclass[journal,twocolumn,10pt,letterpaper,twoside]{IEEEtran}
+\documentclass[journal,compsoc,twocolumn,10pt,letterpaper,twoside]{IEEEtran}
 
 \usepackage{amsfonts}
 \usepackage{amssymb}
@@ -10,7 +10,7 @@
 \usepackage{varioref}
 \usepackage{fancyvrb}
 \usepackage{ifthen}
-\usepackage{cite}
+\usepackage[nocompress]{cite}
 \usepackage{xspace}
 \usepackage[pdfborder={0 0 0}]{hyperref}
 
@@ -78,24 +78,18 @@
 
 \author{Kenneth~Moreland,~\IEEEmembership{Member,~IEEE}%
 %
-\thanks{K. Moreland is with Sandia National Laboratories}
+\thanks{
+  K. Moreland is with Sandia National Laboratories, PO Box 5800, MS 1326,
+  Albuquerque, NM 87185-1326.  E-mail: kmorel@sandia.gov
+
+  \vspace{1ex}
+  \noindent Digital Object Identifier no. 10.1109/TVCG.2012.133.
+
+  \noindent \copyright 2013 IEEE
+}
 }
 
-\date{}
-
-\markboth{%
-IEEE Transactions on Visualizations and Computer Graphics,~Vol.~X, No.~X,~Month~20XX%
-}{%
-Moreland: A Survey of Visualization Pipelines%
-}
-
-\sloppy
-
-\begin{document}
-
-\maketitle
-
-
+\IEEEcompsoctitleabstractindextext{
 \begin{abstract}
 The most common abstraction used by visualization libraries and
 applications today is what is known as the visualization pipeline.  The
@@ -117,6 +111,48 @@ and some of the most recent research directions.
   visualization, functional field model, MapReduce, domain specific
   languages
 \end{IEEEkeywords}
+}
+
+\date{}
+
+\markboth{%
+IEEE Transactions on Visualizations and Computer Graphics,~Vol.~19, No.~3,~March~2013%
+}{%
+Moreland: A Survey of Visualization Pipelines%
+}
+
+% The actual publication starts on page 367.
+\setcounter{page}{367}
+
+
+%% ``Fix'' borders to match the actual publication.
+
+\setlength{\headsep}{0.15in}
+
+% Set both the left and right border to be 26pt on each side (closer to
+% what is in the actual paper) PLUS add another 0.1in on each side to
+% compensate for an oddly thin page.
+\setlength{\oddsidemargin}{-46pt}
+\addtolength{\oddsidemargin}{0.1in}
+\setlength{\evensidemargin}{-46pt}
+\addtolength{\evensidemargin}{0.1in}
+\setlength{\textwidth}{\paperwidth}
+\addtolength{\textwidth}{-52pt}
+\addtolength{\textwidth}{-0.2in}
+
+% This should set the top and bottom border to be 26pt.
+\setlength{\topmargin}{-46pt}
+\setlength{\headheight}{10pt}
+\setlength{\textheight}{\paperheight}
+\addtolength{\textheight}{-52pt}
+\addtolength{\textheight}{-\headheight}
+\addtolength{\textheight}{-\headsep}
+
+\sloppy
+
+\begin{document}
+
+\maketitle
 
 
 \section{Introduction}
@@ -221,24 +257,24 @@ To better scope the contents of this survey, we consider the following
 formal definition.  A visualization pipeline is a dataflow network
 comprising the following three primary components.
 
-\begin{description}[\IEEEsetlabelwidth{Connections}]
-\item[Modules] are functional units.  Each module has zero or more input
-  ports that ingest data and an independent number of zero or more output
-  ports that produce data.  The function of the module is fixed whereas
-  data entering an input port typically change.  Data emitted from the
-  output ports are the result of the module's function operating on the
+\begin{itemize}
+\item \keyterm{Modules} are functional units.  Each module has zero or more
+  input ports that ingest data and an independent number of zero or more
+  output ports that produce data.  The function of the module is fixed
+  whereas data entering an input port typically change.  Data emitted from
+  the output ports are the result of the module's function operating on the
   input data.
-\item[Connections] are directional attachments from the output port of one
-  module to the input port of another module.  Any data emitted from the
-  output port of the connection enter the input port of the connection.
-  Together modules and connections form the nodes and arcs, respectively,
-  of a directional graph.  The dataflow network can be configured by
-  defining connections and connections are arbitrary subject to
-  constraints.
-\item[Execution] management is inherent in the pipeline.  Typically there
-  is a mechanism to invoke execution, but once invoked data automatically
-  flows through the network.
-\end{description}
+\item \keyterm{Connections} are directional attachments from the output
+  port of one module to the input port of another module.  Any data emitted
+  from the output port of the connection enter the input port of the
+  connection.  Together modules and connections form the nodes and arcs,
+  respectively, of a directional graph.  The dataflow network can be
+  configured by defining connections and connections are arbitrary subject
+  to constraints.
+\item \keyterm{Execution} management is inherent in the pipeline.
+  Typically there is a mechanism to invoke execution, but once invoked data
+  automatically flows through the network.
+\end{itemize}
 
 For a system or body of research to be considered in this survey, it must
 be the \emph{embodiment} of a visualization pipeline.  It must allow the
@@ -461,17 +497,17 @@ management for out of core and parallel computation (described in Sections
 \ref{sec:OutOfCore} and \ref{sec:ParallelExecution}, respectively).
 
 Visualization pipelines operate on three basic types of regions.
-\begin{description}[\IEEEsetlabelwidth{Extents}]
-\item[Extents] are valid index ranges for regular multidimensional arrays
-  of data.  Extents allow a fine granularity in defining regions as
+\begin{itemize}
+\item \keyterm{Extents} are valid index ranges for regular multidimensional
+  arrays of data.  Extents allow a fine granularity in defining regions as
   sub-arrays within a larger array.
-\item[Pieces] are arbitrary collections of cells.  Pieces allow
+\item \keyterm{Pieces} are arbitrary collections of cells.  Pieces allow
   unstructured grids to be easily decomposed into discretionary regions.
-\item[Blocks] (or domains) represent a logical domain decomposition.
-  Blocks are similar to pieces in that they can represent arbitrary
-  collections, but blocks are defined by the data set and their structures
-  are considered to have some meaning.
-\end{description}
+\item \keyterm{Blocks} (or domains) represent a logical domain
+  decomposition.  Blocks are similar to pieces in that they can represent
+  arbitrary collections, but blocks are defined by the data set and their
+  structures are considered to have some meaning.
+\end{itemize}
 The region metadata may also include the spatial range of each region.
 Such information is useful when performing operations with known spatial
 bounds.
