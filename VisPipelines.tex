@@ -5,6 +5,7 @@
 \usepackage{amsfonts}
 \usepackage{amssymb}
 \usepackage{amsmath}
+\usepackage{dblfloatfix}
 \usepackage{graphicx}
 \usepackage{subfig}
 \usepackage{varioref}
@@ -589,6 +590,19 @@ would be passed up as depicted in
 pipeline, filters add their impacts to it, forming a union of the
 requirements, abilities, and limitations of the pipeline.
 
+\begin{figure*}[htbp]
+  \centering
+  \begin{tabular}{@{}c@{\qquad}c@{\qquad}c@{}}
+    \includegraphics[scale=.9]{images/TaskParallel0} &
+    \includegraphics[scale=.9]{images/TaskParallel1} &
+    \includegraphics[scale=.9]{images/TaskParallel2} \\
+    $T = t_0$ & $T = t_1$ & $T = t_2$
+  \end{tabular}
+  \caption{Concurrent execution with task parallelism.  Boxes indicate a
+    region of the pipeline executed at a given time.}
+  \label{fig:TaskParallelism}
+\end{figure*}
+
 \subsection{Prioritized Streaming}
 \label{sec:PrioritizedStreaming}
 
@@ -661,20 +675,7 @@ the source.  This is done by expanding either region metadata
 pass and adjust the field ranges in the query\lcite{Rubel2008}.
 
 
-\begin{figure*}[htbp]
-  \centering
-  \begin{tabular}{@{}c@{\qquad}c@{\qquad}c@{}}
-    \includegraphics[scale=.9]{images/TaskParallel0} &
-    \includegraphics[scale=.9]{images/TaskParallel1} &
-    \includegraphics[scale=.9]{images/TaskParallel2} \\
-    $T = t_0$ & $T = t_1$ & $T = t_2$
-  \end{tabular}
-  \caption{Concurrent execution with task parallelism.  Boxes indicate a
-    region of the pipeline executed at a given time.}
-  \label{fig:TaskParallelism}
-\end{figure*}
-
-\begin{figure*}[htbp]
+\begin{figure*}[tb]
   \centering
   \begin{tabular}{@{}c@{\qquad}c@{\qquad}c@{\qquad}c@{}}
     \includegraphics[scale=.9]{images/PipelineParallel0} &
